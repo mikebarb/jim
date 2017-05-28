@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'ordersedit', to: 'orders#indexedit'
+  resources :orders
   #get 'sessions/new'
   #get 'sessions/create'
   #get 'sessions/destroy'

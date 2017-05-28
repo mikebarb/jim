@@ -10,10 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170525061609) do
+ActiveRecord::Schema.define(version: 20170526055854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "orders", force: :cascade do |t|
+    t.integer  "product_id"
+    t.integer  "shop_id"
+    t.date     "day"
+    t.integer  "quantity"
+    t.boolean  "locked"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day"], name: "index_orders_on_day", using: :btree
+    t.index ["product_id"], name: "index_orders_on_product_id", using: :btree
+    t.index ["shop_id"], name: "index_orders_on_shop_id", using: :btree
+    t.index ["user_id"], name: "index_orders_on_user_id", using: :btree
+  end
 
   create_table "products", force: :cascade do |t|
     t.string   "title"
@@ -48,4 +63,7 @@ ActiveRecord::Schema.define(version: 20170525061609) do
     t.datetime "updated_at",      null: false
   end
 
+  add_foreign_key "orders", "products"
+  add_foreign_key "orders", "shops"
+  add_foreign_key "orders", "users"
 end

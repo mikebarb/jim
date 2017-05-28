@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Orders</h1>
+user: <%= @current_user %><br>
+shop: <%= @current_shop %> - (<%= @current_shop_id %>)<br>
+day : <%= @current_day %><br>
+shop_id : <%= @current_shop_id %><br>
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Shop</th>
+      <th>Day</th>
+      <th>Quantity</th>
+      <th>Locked</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.product.title %></td>
+        <td><%= order.shop.name %></td>
+        <td><%= order.day %></td>
+        <td><%= order.quantity %></td>
+        <td><%= order.locked %></td>
+        <td><%= order.user.name %></td>
+        <td><%= link_to 'Show', order %></td>
+        <td><%= link_to 'Edit', edit_order_path(order) %></td>
+        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Order', new_order_path %>
+<%= link_to 'Edit Order', ordersedit_path %>
+

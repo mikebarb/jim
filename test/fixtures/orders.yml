@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: one
+  shop: one
+  day: 2017-05-26
+  quantity: 1
+  locked: false
+  user: one
+
+two:
+  product: two
+  shop: two
+  day: 2017-05-26
+  quantity: 1
+  locked: false
+  user: two

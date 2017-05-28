@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+user: <%= @current_user %><br>
+shop: <%= @current_shop %><br>
+day : <%= @current_day %><br>
+
+
+<h1>Order for Products - index_edit</h1>
+
+<table>
+  <% @products.each do |product| %>
+    <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+      <td class="list_description"><%= product.title %></td>
+      <td><%= product.leadtime %></td>
+      <td class="price"><%= number_to_currency(product.price) %></td>
+      <td><%= product.quantity =%></td>
+      <td><%= product.day =%></td>        
+      <td><%= product.shop_id =%></td>        
+    </tr>
+  <% end %>
+</table>
+
+<br>
+
+<%= link_to 'New Order', new_order_path %>
