@@ -8,13 +8,13 @@ day : <%= @current_day %><br>
 
 <table>
   <% @products.each do |product| %>
-    <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
-      <td class="list_description"><%= product.title %></td>
-      <td><%= product.leadtime %></td>
+    <tr class="product" id="<%= product.title %>">
+      <td class="title"><%= product.title %></td>
       <td class="price"><%= number_to_currency(product.price) %></td>
-      <td><%= product.quantity =%></td>
-      <td><%= product.day =%></td>        
-      <td><%= product.shop_id =%></td>        
+      <td>
+        <input class="qty" type="number" id=<%= product.id %> value=<%= product.quantity =%> min=0 size=6 />
+        
+      </td>
     </tr>
   <% end %>
 </table>

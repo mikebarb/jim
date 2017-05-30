@@ -4,12 +4,6 @@ class OrdersController < ApplicationController
 
   # GET /ordersedit
   def indexedit
-#    @products = Product
-#      .select("products.*, orders.*, orders.id as orders_id")
-#      .left_outer_joins(:orders)
-     # .dayshop(@current_day, @current_shop_id)
-# == SIMPLE EXAMPLE OF OUTER JOIN WITH NO FILTER CONDITION === */
-# == THIS WILL GIVE ALL THE PRODUCTS AND THE ORDERS IF ANY === */
     @products = Product.find_by_sql [ "
       SELECT * FROM products AS p
       LEFT OUTER JOIN orders AS o 
@@ -58,11 +52,21 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
+    logger.debug "controller orders update called"
+    logger.debug "id = " + params[:id] + "   quantity = " + params[:quantity]
+    #@order = Order.find(params[:id])
+    logger.debug "@order-1=" + @order.inspect
+    @order.quantity = params[:quantity]
+    logger.debug "@order-2=" + @order.inspect
     respond_to do |format|
-      if @order.update(order_params)
+      #if @order.update(order_params)
+      if @order.update(@order.attributes)
+        logger.debug "Order controller - successful update"
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
+        format.js
         format.json { render :show, status: :ok, location: @order }
       else
+        logger.debug "Order controller - failed update"
         format.html { render :edit }
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
@@ -87,7 +91,8 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
+      params.require(:id).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
+      #params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
     end
     
     # Check that the user has logged in

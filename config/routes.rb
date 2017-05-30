@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'ordersedit', to: 'orders#indexedit'
+  post 'orders/:id', to: 'orders#update'
   resources :orders
   #get 'sessions/new'
   #get 'sessions/create'
