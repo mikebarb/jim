@@ -9,14 +9,15 @@
 
 <table>
   <% @products.each do |product| %>
-    <tr class="product" id="<%= product.id %>">
-      <td class="product_id"><%= product.id %></td>
+    <tr class="product" id="<%= product.product_id %>">
+      <td class="product_id"><%= product.product_id %></td>
       <td class="title"><%= product.title %></td>
       <td class="price"><%= number_to_currency(product.price) %></td>
       <td> 
-        <input class="qty" type="number" id=<%= product.id %> value=<%= product.quantity =%> min=0 size=6 />
+        <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
         <p class="origqty"><%= product.quantity =%></p>
       </td>
+      <td class="order_id"><%= product.order_id %></td>
     </tr>
   <% end %>
 </table>

@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   # GET /ordersedit
   def indexedit
     @products = Product.find_by_sql [ "
-      SELECT *
+      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id
       FROM products AS p
       LEFT OUTER JOIN orders AS o 
       ON p.id = o.product_id
