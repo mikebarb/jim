@@ -5,12 +5,14 @@ class OrdersController < ApplicationController
   # GET /ordersedit
   def indexedit
     @products = Product.find_by_sql [ "
-      SELECT * FROM products AS p
+      SELECT *
+      FROM products AS p
       LEFT OUTER JOIN orders AS o 
       ON p.id = o.product_id
       AND o.day = ? AND o.shop_id = ?
       ORDER BY p.title
     ", @current_day, @current_shop_id ]
+    logger.debug "products:" + @products.inspect
   end
 
   # GET /orders
@@ -53,14 +55,12 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1.json
   def update
     logger.debug "controller orders update called"
-    logger.debug "id = " + params[:id] + "   quantity = " + params[:quantity]
-    #@order = Order.find(params[:id])
     logger.debug "@order-1=" + @order.inspect
     @order.quantity = params[:quantity]
     logger.debug "@order-2=" + @order.inspect
     respond_to do |format|
-      #if @order.update(order_params)
-      if @order.update(@order.attributes)
+      if @order.update(order_params)
+      #if @order.update(@order.attributes)
         logger.debug "Order controller - successful update"
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
         format.js
@@ -91,8 +91,8 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:id).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
-      #params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
+      #params.require(:id).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
+      params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id, :origqty)
     end
     
     # Check that the user has logged in
@@ -104,5 +104,6 @@ class OrdersController < ApplicationController
       @current_shop = session[:user_shop]
       @current_day = session[:user_day]
       @current_shop_id = session[:user_shop_id]
+      @current_user_id = session[:user_id]
     end
 end

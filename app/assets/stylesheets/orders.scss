@@ -28,7 +28,16 @@
   background-color: #afa;
   line-height: 18px;
   //border:1px solid black;
-}td {
+}
+.origqty {
+  display: inline;  // use inline or none
+  margin: 5;
+  color: black;
+  background-color: #afa;
+  line-height: 18px;
+  //border:1px solid black;
+}
+td {
   vertical-align: top;
 }
 table {

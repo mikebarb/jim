@@ -1,19 +1,21 @@
 <p id="notice"><%= notice %></p>
-user: <%= @current_user %><br>
-shop: <%= @current_shop %><br>
-day : <%= @current_day %><br>
-
+<table>
+  <tr><td>user</td><td><%= @current_user %></td><td id="user_id"><%= @current_user_id %></td></tr>
+  <tr><td>shop</td><td><%= @current_shop %></td><td id="shop_id"><%= @current_shop_id %></td></tr>
+  <tr><td>deliver</td><td id="day"><%= @current_day %></td><td></td></tr>
+</table>
 
 <h1>Order for Products - index_edit</h1>
 
 <table>
   <% @products.each do |product| %>
-    <tr class="product" id="<%= product.title %>">
+    <tr class="product" id="<%= product.id %>">
+      <td class="product_id"><%= product.id %></td>
       <td class="title"><%= product.title %></td>
       <td class="price"><%= number_to_currency(product.price) %></td>
-      <td>
+      <td> 
         <input class="qty" type="number" id=<%= product.id %> value=<%= product.quantity =%> min=0 size=6 />
-        
+        <p class="origqty"><%= product.quantity =%></p>
       </td>
     </tr>
   <% end %>

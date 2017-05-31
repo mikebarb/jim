@@ -22,6 +22,7 @@ shop_id : <%= @current_shop_id %><br>
   <tbody>
     <% @orders.each do |order| %>
       <tr>
+        <td><%= order.id %></td>
         <td><%= order.product.title %></td>
         <td><%= order.shop.name %></td>
         <td><%= order.day %></td>
