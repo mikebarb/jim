@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
+  get 'reports/baker'
+
+  get 'reports/deliver'
+
   get 'ordersedit', to: 'orders#indexedit'
   post 'orders/:id', to: 'orders#update'
+  get 'ordersbakers/:day', to: 'orders#bakers'
   resources :orders
   #get 'sessions/new'
   #get 'sessions/create'

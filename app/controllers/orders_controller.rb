@@ -2,6 +2,28 @@ class OrdersController < ApplicationController
   before_action :check_login
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
+
+  # GET /baker
+  def bakers
+    logger.debug "bakers:" + @bakers.inspect
+    @bakers = Order.find_by_sql ["
+      SELECT SUM(quantity) as totalqty, p.title
+      FROM orders AS o
+      INNER JOIN products AS p 
+      ON o.product_id = p.id AND o.day = ?
+      GROUP BY p.title
+      ORDER BY p.title ASC
+    ", params[:day]]
+    
+    @baker1 = Order
+              .where(day: params[:day])
+              .joins(:product, :shop)
+              .order(:product_id)
+              
+    logger.debug "bakers:" + @bakers.inspect
+  end
+
+
   # GET /ordersedit
   def indexedit
     @products = Product.find_by_sql [ "
