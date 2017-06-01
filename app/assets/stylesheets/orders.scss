@@ -30,14 +30,16 @@
   //border:1px solid black;
 }
 .origqty {
-  display: inline;  // use inline or none
+  display: inline;
   margin: 5;
   color: black;
   background-color: #afa;
   line-height: 18px;
   //border:1px solid black;
 }
-td {
+.hideme {
+  display: inline;  // use inline or none
+}td {
   vertical-align: top;
 }
 table {

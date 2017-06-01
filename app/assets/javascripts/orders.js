@@ -9,11 +9,14 @@
 $(document).ready(function() {
     console.log("document ready");
   
-    $(".qty").mouseleave(function(){
-        //console.log("mouse left quantity =  " + $(this).val() + " id = " + $(this).attr("id") );
-        //console.log("https://ide.c9.io/micmac/jim/orders_id/" + $(this).attr("id"));
-        //console.log("quantity: " + $(this).val());
-        //console.log("now call ajax");
+    $(".qty").on("focusout keypress", function(e){
+        if(e.type == "keypress"){
+            console.log("detected keypress");
+            var keycode = (e.keyCode ? e.keyCode : e.which); 
+            if(keycode != '13'){
+              return;
+            }
+        }
        
         // do some checking if the value has changed
         var eleqty = $(this);
@@ -128,4 +131,8 @@ $(document).ready(function() {
         }
     });
 });
+
+function processchange(){
+    console.log("process change being executed");
+}
     
