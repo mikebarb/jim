@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170526055854) do
+ActiveRecord::Schema.define(version: 20170601064303) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20170526055854) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["day"], name: "index_orders_on_day", using: :btree
+    t.index ["product_id", "shop_id", "day"], name: "index_orders_on_product_id_and_shop_id_and_day", unique: true, using: :btree
     t.index ["product_id"], name: "index_orders_on_product_id", using: :btree
     t.index ["shop_id"], name: "index_orders_on_shop_id", using: :btree
     t.index ["user_id"], name: "index_orders_on_user_id", using: :btree

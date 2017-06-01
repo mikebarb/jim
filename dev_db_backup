@@ -260,9 +260,11 @@ COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at
 30	4	1	2017-05-26	5	f	1	2017-05-31 22:28:28.656378	2017-06-01 01:03:49.631693
 3	3	2	2017-05-26	2	f	1	2017-05-26 06:38:27.847059	2017-05-30 05:10:51.956524
 1	1	1	2017-05-26	98	f	1	2017-05-26 06:06:30.204656	2017-06-01 01:30:00.567746
-2	2	1	2017-05-26	5	f	1	2017-05-26 06:37:07.146307	2017-06-01 01:51:11.792991
-32	5	1	2017-05-26	211	f	1	2017-06-01 02:08:52.942288	2017-06-01 02:20:58.504743
+37	7	1	2017-05-26	1	f	1	2017-06-01 05:43:24.356252	2017-06-01 05:43:24.356252
 7	3	1	2017-05-26	5	f	1	2017-05-31 11:26:33.849698	2017-05-31 11:26:33.849698
+38	5	1	2017-05-27	1	f	1	2017-06-01 05:49:51.658615	2017-06-01 05:49:51.658615
+39	7	1	2017-05-27	1	f	1	2017-06-01 06:58:07.681955	2017-06-01 06:58:07.681955
+40	1	1	2017-06-01	1	f	1	2017-06-01 06:59:49.556943	2017-06-01 06:59:49.556943
 \.
 
 
@@ -270,7 +272,7 @@ COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('orders_id_seq', 36, true);
+SELECT pg_catalog.setval('orders_id_seq', 41, true);
 
 
 --
@@ -303,6 +305,7 @@ COPY schema_migrations (version) FROM stdin;
 20170525040128
 20170525061609
 20170526055854
+20170601064303
 \.
 
 
@@ -329,8 +332,8 @@ SELECT pg_catalog.setval('shops_id_seq', 3, true);
 --
 
 COPY users (id, name, email, password_digest, role, day, shop, created_at, updated_at) FROM stdin;
-1	Mike	mike@mikebarb.net	$2a$10$./Q9SgUB/xlDuKZTBT7SPuD.PVtRS7IIbEjbkPljKlFCjXhSchNkO	user	2017-05-26	Woden Bakery	2017-05-25 06:27:19.741916	2017-05-25 06:27:19.741916
 2	Dan	danmcauliffe@outlook.com	$2a$10$6.skTIYDYHjEQ/wQjuPoLOsjJAfSV2Irlz.bsf/kPbGhZqpdHQjZ6	user	2017-05-26	Belconnen Bakery	2017-05-25 06:28:39.415435	2017-05-25 06:28:39.415435
+1	Mike	mike@mikebarb.net	$2a$10$pvfp7e9hoZ07fFxEB958Z.EtJ0kj7JJxFlTKGHbp6Fjud6lcWavAK	user	2017-05-27	Woden Bakery	2017-05-25 06:27:19.741916	2017-06-01 05:45:24.846793
 \.
 
 
@@ -401,6 +404,13 @@ CREATE INDEX index_orders_on_day ON orders USING btree (day);
 --
 
 CREATE INDEX index_orders_on_product_id ON orders USING btree (product_id);
+
+
+--
+-- Name: index_orders_on_product_id_and_shop_id_and_day; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_orders_on_product_id_and_shop_id_and_day ON orders USING btree (product_id, shop_id, day);
 
 
 --
