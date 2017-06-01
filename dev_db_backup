@@ -1,0 +1,457 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.ar_internal_metadata OWNER TO postgres;
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE orders (
+    id integer NOT NULL,
+    product_id integer,
+    shop_id integer,
+    day date,
+    quantity integer,
+    locked boolean,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.orders_id_seq OWNER TO postgres;
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE orders_id_seq OWNED BY orders.id;
+
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE products (
+    id integer NOT NULL,
+    title character varying,
+    description text,
+    leadtime integer,
+    price numeric(8,2),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.products OWNER TO postgres;
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.products_id_seq OWNER TO postgres;
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE products_id_seq OWNED BY products.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO postgres;
+
+--
+-- Name: shops; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE shops (
+    id integer NOT NULL,
+    name character varying,
+    address text,
+    suburb character varying,
+    postcode character varying,
+    contact character varying,
+    phone character varying,
+    email character varying,
+    note text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.shops OWNER TO postgres;
+
+--
+-- Name: shops_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE shops_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.shops_id_seq OWNER TO postgres;
+
+--
+-- Name: shops_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE shops_id_seq OWNED BY shops.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    name character varying,
+    email character varying,
+    password_digest character varying,
+    role character varying,
+    day date,
+    shop character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders ALTER COLUMN id SET DEFAULT nextval('orders_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY products ALTER COLUMN id SET DEFAULT nextval('products_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY shops ALTER COLUMN id SET DEFAULT nextval('shops_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: ar_internal_metadata; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ar_internal_metadata (key, value, created_at, updated_at) FROM stdin;
+environment	development	2017-05-15 11:18:50.768712	2017-05-15 11:18:50.768712
+\.
+
+
+--
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at, updated_at) FROM stdin;
+4	1	1	2017-05-27	2	f	1	2017-05-27 03:55:08.980609	2017-05-27 03:55:08.980609
+30	4	1	2017-05-26	5	f	1	2017-05-31 22:28:28.656378	2017-06-01 01:03:49.631693
+3	3	2	2017-05-26	2	f	1	2017-05-26 06:38:27.847059	2017-05-30 05:10:51.956524
+1	1	1	2017-05-26	98	f	1	2017-05-26 06:06:30.204656	2017-06-01 01:30:00.567746
+2	2	1	2017-05-26	5	f	1	2017-05-26 06:37:07.146307	2017-06-01 01:51:11.792991
+32	5	1	2017-05-26	211	f	1	2017-06-01 02:08:52.942288	2017-06-01 02:20:58.504743
+7	3	1	2017-05-26	5	f	1	2017-05-31 11:26:33.849698	2017-05-31 11:26:33.849698
+\.
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('orders_id_seq', 36, true);
+
+
+--
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY products (id, title, description, leadtime, price, created_at, updated_at) FROM stdin;
+2	brown bread	a loaf of brown bread	0	3.25	2017-05-15 11:23:00.660243	2017-05-15 11:23:00.660243
+3	buns	buns for testing	0	0.56	2017-05-25 03:22:07.3426	2017-05-25 03:22:32.058213
+1	white bread	loaf of white bread	0	2.58	2017-05-15 11:21:30.527193	2017-05-27 04:45:01.22481
+4	cake - small cholocate	Test entry	0	5.70	2017-05-27 12:20:24.479034	2017-05-28 04:33:07.736655
+5	Baguette	French stick loaf.	0	3.79	2017-05-31 03:51:08.889633	2017-05-31 03:52:30.841232
+7	White Sour	White Sour	0	1.00	2017-05-31 04:10:06.308213	2017-05-31 04:10:06.308213
+\.
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('products_id_seq', 7, true);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY schema_migrations (version) FROM stdin;
+20170515111304
+20170525040128
+20170525061609
+20170526055854
+\.
+
+
+--
+-- Data for Name: shops; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY shops (id, name, address, suburb, postcode, contact, phone, email, note, created_at, updated_at) FROM stdin;
+1	Woden Bakery	45 Phillip St.	Woden	3333	John Jones	(02) 2222 3333	john@hotmail.com	This is a note.	2017-05-25 04:04:31.310697	2017-05-25 04:04:31.310697
+2	Belconnen Bakery	89 Hill St.	Bruce	2600	Bill Smith	02 7777 8888	bill@hotmail.com	test case	2017-05-26 07:18:49.168836	2017-05-26 07:18:49.168836
+3	Civic	87 Doo St.	Civic	2700	Bill Peters	02 5678 5677	bill@hotmail.com	This is for testing only.	2017-05-31 03:54:45.608771	2017-05-31 03:54:45.608771
+\.
+
+
+--
+-- Name: shops_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('shops_id_seq', 3, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY users (id, name, email, password_digest, role, day, shop, created_at, updated_at) FROM stdin;
+1	Mike	mike@mikebarb.net	$2a$10$./Q9SgUB/xlDuKZTBT7SPuD.PVtRS7IIbEjbkPljKlFCjXhSchNkO	user	2017-05-26	Woden Bakery	2017-05-25 06:27:19.741916	2017-05-25 06:27:19.741916
+2	Dan	danmcauliffe@outlook.com	$2a$10$6.skTIYDYHjEQ/wQjuPoLOsjJAfSV2Irlz.bsf/kPbGhZqpdHQjZ6	user	2017-05-26	Belconnen Bakery	2017-05-25 06:28:39.415435	2017-05-25 06:28:39.415435
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_id_seq', 2, true);
+
+
+--
+-- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: shops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY shops
+    ADD CONSTRAINT shops_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_orders_on_day; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_day ON orders USING btree (day);
+
+
+--
+-- Name: index_orders_on_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_product_id ON orders USING btree (product_id);
+
+
+--
+-- Name: index_orders_on_shop_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_shop_id ON orders USING btree (shop_id);
+
+
+--
+-- Name: index_orders_on_user_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_user_id ON orders USING btree (user_id);
+
+
+--
+-- Name: fk_rails_7e761c2e1b; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT fk_rails_7e761c2e1b FOREIGN KEY (shop_id) REFERENCES shops(id);
+
+
+--
+-- Name: fk_rails_dfb33b2de0; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT fk_rails_dfb33b2de0 FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: fk_rails_f868b47f6a; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT fk_rails_f868b47f6a FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
