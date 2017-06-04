@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Day:</strong>
+  <%= @lockday.day %>
+</p>
+
+<p>
+  <strong>Locked:</strong>
+  <%= @lockday.locked %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @lockday.user %>
+</p>
+
+<%= link_to 'Edit', edit_lockday_path(@lockday) %> |
+<%= link_to 'Back', lockdays_path %>

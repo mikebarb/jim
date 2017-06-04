@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Deliveries for : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
+
+<% @previous_shop = "" %>
+<% @delivery.each do |deliver| %>
+  
+  <% if @previous_shop != deliver.shop_name %>
+    <% if @previous_shop != "" %>
+        </tbody>
+      </table>
+    <% end %>
+    <% @previous_shop = deliver.shop_name %>
+    <p>
+    <h2>Deliveries to <%= deliver.shop_name %> for <%= Date.parse(@current_day).strftime("%A") %> <%= @current_day %> </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+  <% end %>
+  
+  <tr>
+    <td><%= deliver.title %></td>
+    <td><%= deliver.quantity %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Order', new_order_path %>
+<%= link_to 'Edit Order', ordersedit_path %>
+

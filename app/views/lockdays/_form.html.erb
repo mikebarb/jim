@@ -1,0 +1,32 @@
+<%= form_for(lockday) do |f| %>
+  <% if lockday.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(lockday.errors.count, "error") %> prohibited this lockday from being saved:</h2>
+
+      <ul>
+      <% lockday.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :day %>
+    <%= f.date_select :day %>
+  </div>
+
+  <div class="field">
+    <%= f.label :locked %>
+    <%= f.text_field :locked %>
+  </div>
+
+  <div class="field">
+    <%= f.label :user_id %>
+    <%= f.text_field :user_id %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

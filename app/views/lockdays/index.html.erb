@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Lockdays</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Locked</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @lockdays.each do |lockday| %>
+      <tr>
+        <td><%= lockday.day %></td>
+        <td><%= lockday.locked %></td>
+        <td><%= lockday.user %></td>
+        <td><%= link_to 'Show', lockday %></td>
+        <td><%= link_to 'Edit', edit_lockday_path(lockday) %></td>
+        <td><%= link_to 'Destroy', lockday, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Lockday', new_lockday_path %>

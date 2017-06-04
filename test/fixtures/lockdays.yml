@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  day: 2017-06-02
+  locked: 
+  user: one
+
+two:
+  day: 2017-06-02
+  locked: 
+  user: two

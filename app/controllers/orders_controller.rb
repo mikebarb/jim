@@ -20,9 +20,25 @@ class OrdersController < ApplicationController
               .joins(:product, :shop)
               .order(:product_id)
               
-    logger.debug "bakers:" + @bakers.inspect
+    @lockday = Lockday
+                 .where(day: params[:day])
+              
+    logger.debug "lockday:" + @lockday.inspect
   end
 
+  # GET /delivery
+  def delivery
+    logger.debug "delivery:" + @delivery.inspect
+    @delivery = Order.find_by_sql ["
+      SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
+      FROM orders AS o
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN shops AS s ON o.shop_id = s.id
+      ORDER BY s.name ASC, p.title ASC
+    ", params[:day]]
+              
+    logger.debug "delivery:" + @delivery.inspect
+  end
 
   # GET /ordersedit
   def indexedit
@@ -34,6 +50,13 @@ class OrdersController < ApplicationController
       AND o.day = ? AND o.shop_id = ?
       ORDER BY p.title
     ", @current_day, @current_shop_id ]
+    
+    @lockday = Lockday
+             .where(day: @current_day)
+    @locked = @lockday.count
+          
+    logger.debug "lockday:" + @lockday.inspect
+    logger.debug "locked:" +  @locked.inspect
     logger.debug "products:" + @products.inspect
   end
 

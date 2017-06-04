@@ -23,6 +23,7 @@ class SessionsController < ApplicationController
     session[:user_shop] = nil
     session[:user_shop_id] = nil
     session[:user_day] = nil
-    redirect_to products_url, notice: "Logged out"
+    redirect_to login_url, notice: "Logged out"
+    #redirect_to products_url, notice: "Logged out"
   end
 end

@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170601064303) do
+ActiveRecord::Schema.define(version: 20170602000840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "lockdays", force: :cascade do |t|
+    t.date     "day"
+    t.boolean  "locked"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day"], name: "index_lockdays_on_day", using: :btree
+    t.index ["user_id"], name: "index_lockdays_on_user_id", using: :btree
+  end
 
   create_table "orders", force: :cascade do |t|
     t.integer  "product_id"
@@ -64,6 +74,7 @@ ActiveRecord::Schema.define(version: 20170601064303) do
     t.datetime "updated_at",      null: false
   end
 
+  add_foreign_key "lockdays", "users"
   add_foreign_key "orders", "products"
   add_foreign_key "orders", "shops"
   add_foreign_key "orders", "users"

@@ -2,7 +2,28 @@
 
 <h1>Bake to fill the Orders to</h1>
 <h1>Deliver On : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
+<p> This table for diagnositics only</p>
 
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bakers.each do |baker| %>
+      <tr>
+        <td><%= baker.title %></td>
+        <td><%= baker.totalqty %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>This table is the expected output - data can be applied in any format.</p>
 <table>
     <thead>
     <tr>
@@ -19,26 +40,6 @@
         <td><%= baker1.product_id %></td>
         <td><%= baker1.shop_id %></td>
         <td><%= baker1.quantity %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
-
-<table>
-  <thead>
-    <tr>
-      <th>Product</th>
-      <th>Quantity</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @bakers.each do |baker| %>
-      <tr>
-        <td><%= baker.title %></td>
-        <td><%= baker.totalqty %></td>
       </tr>
     <% end %>
   </tbody>

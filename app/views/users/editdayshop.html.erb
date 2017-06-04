@@ -1,0 +1,32 @@
+<h1>Editing Shop and Day for User - editdayshop</h1>
+
+<% user = @user.first %>
+<%= form_for(user, :url => userdayshop_path, method: :patch) do |f| %>
+
+  <div class="field">
+    <%= f.label :id %>
+    <%= f.text_field :id, hidden: true %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, readonly: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :day %>
+    <%= f.date_select :day %>
+  </div>
+
+  <div class="field">
+    <%= f.label :shop %>
+    <%= f.select :shop, @shop_options %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+<%= link_to 'Back', users_path %>

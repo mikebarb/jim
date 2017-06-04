@@ -1,5 +1,12 @@
 <p id="notice"><%= notice %></p>
 
+<table>
+  <tr><td>user</td><td><%= @current_user %></td><td id="user_id"><%= @current_user_id %></td></tr>
+  <tr><td>shop</td><td><%= @current_shop %></td><td id="shop_id"><%= @current_shop_id %></td></tr>
+  <tr><td>deliver</td><td id="day"><%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</td><td></td></tr>
+</table>
+<%= link_to 'Update shop or delivery day', userdayshop_path %>
+
 <h1>Order for Products - index_edit</h1>
 
 <table>
@@ -8,10 +15,14 @@
       <td class="product_id"><%= product.product_id %></td>
       <td class="title"><%= product.title %></td>
       <td class="price"><%= number_to_currency(product.price) %></td>
-      <td> 
-        <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
-        <p class="origqty"><%= product.quantity =%></p>
-      </td>
+      <% if @locked == 0 %>
+        <td> 
+          <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
+          <p class="origqty"><%= product.quantity =%></p>
+        </td>
+      <% else %>
+        <td class="qty_locked"><%= product.quantity %></td>
+      <% end %>
       <td class="order_id"><%= product.order_id %></td>
     </tr>
   <% end %>

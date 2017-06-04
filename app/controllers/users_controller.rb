@@ -19,6 +19,23 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    @shop_options = Shop.all.map{ |u| [u.name] }
+  end
+
+  # GET /users/1/editdayshop
+  def editdayshop
+    logger.debug "in the user controller -> editdayshop"
+    logger.debug "session user_id: " + session[:user_id].inspect
+    unless session[:user_id].nil?  # check that we are logged in
+      @user = User.where(id: session[:user_id])
+      @shop_options = Shop.all.map{ |u| [u.name] }
+      logger.debug "in the user controller -> editdayshop and logged in"
+      logger.debug "user: " + @user.inspect
+      logger.debug "shop_options: " + @shop_options.inspect
+    else
+      logger.debug "in the user controller -> editdayshop and NOT logged in"
+      redirect_to users_url, notice: 'User is not logged in!!!'
+    end
   end
 
   # POST /users
@@ -42,14 +59,75 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
+        logger.debug "users controller - update => update successful"
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render :show, status: :ok, location: @user }
       else
+        logger.debug "users controller - update => update failed"
         format.html { render :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
+
+  # PATCH/PUT /users/1/updatedayshop
+  # PATCH/PUT /users/1.json
+  def updatedayshop
+    @user = User.find(user_params[:id])
+    logger.debug "@user:" + @user.inspect
+
+    @myparams = user_params
+    logger.debug "@myparams:" + @myparams.inspect
+
+    @currentparams = @user.attributes
+    logger.debug "@currentparams:" + @currentparams.inspect
+
+    @myshop = user_params[:shop]
+    logger.debug "@myshop:" + @myshop.inspect
+
+    @myday =Date.new @myparams["day(1i)"].to_i, @myparams["day(2i)"].to_i, @myparams["day(3i)"].to_i
+    logger.debug "@myday:" + @myday.inspect
+    
+    if @user.shop != @myshop
+      logger.debug "shop has changed"
+      unless @myshop.nil?
+        logger.debug "shop has valid value" + @myshop.inspect
+        @user.update_attribute(:shop, @myshop)
+      end
+    end
+    
+    if @user.day != @myday
+      logger.debug "day has changed"
+      unless @myday.nil?
+        logger.debug "day has valid value" + @myday.inspect
+        @user.update_attribute(:day, @myday)
+      end
+    end
+    logger.debug "@user:" + @user.inspect
+
+    respond_to do |format|
+      if @user.save
+        unless session[:user_id].nil?  # user is logged in
+          # update matching session parameters
+          session[:user_day] = @myday unless @myday.nil?
+          unless @myshop.nil?
+            @shop = Shop.find_by(name: @myshop)
+            session[:user_shop] = @myshop
+            session[:user_shop_id] = @shop.id
+          end
+        end
+        logger.debug "users controller - update => update successful"
+        format.html { redirect_to ordersedit_path }
+        format.json { render :show, status: :ok, location: @user }
+        
+      else
+        logger.debug "users controller - update => update failed"
+        format.html { render :edit }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
 
   # DELETE /users/1
   # DELETE /users/1.json
@@ -69,6 +147,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :day, :shop)
+      params.require(:user).permit(:id, :name, :email, :password, :password_confirmation, :role, :day, :shop)
     end
 end
