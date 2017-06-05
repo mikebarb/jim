@@ -64,6 +64,28 @@ class OrdersController < ApplicationController
     logger.debug "delivery:" + @delivery.inspect
   end
 
+  # GET /deliverypdf
+  def deliverypdf
+    @delivery = Order.find_by_sql ["
+      SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
+      FROM orders AS o
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN shops AS s ON o.shop_id = s.id
+      ORDER BY s.name ASC, p.title ASC
+    ", @current_day]
+              
+    logger.debug "delivery:" + @delivery.inspect
+    
+    respond_to do |format|
+      format.html do
+        render pdf: "Delivery_Dockets",
+                    template: "orders/deliverypdf.pdf.erb",
+                    locals: {:delivery => @delivery}
+      end
+    end
+    
+  end
+
   # GET /ordersedit
   def indexedit
     @products = Product.find_by_sql [ "

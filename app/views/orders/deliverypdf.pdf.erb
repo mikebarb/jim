@@ -1,8 +1,5 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Deliveries for : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
-
-<h2></h2><%= link_to 'PDF Version', ordersdeliverypdf_path %></h2>
+<p style='page-break-after:always;'></p>
 
 <% @previous_shop = "" %>
 <% @delivery.each do |deliver| %>
@@ -11,6 +8,7 @@
     <% if @previous_shop != "" %>
         </tbody>
       </table>
+      <p style='page-break-after:always;'></p>
     <% end %>
     <% @previous_shop = deliver.shop_name %>
     <p>
@@ -33,8 +31,4 @@
   </tbody>
 </table>
 
-<br>
-<%= link_to 'Show bakers page', ordersbakers_path %>
-<%= link_to 'Show baker does page', ordersbakerdoes_path %>
-<%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
 
