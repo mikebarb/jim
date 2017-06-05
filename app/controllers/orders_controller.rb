@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
       ON o.product_id = p.id AND o.day = ?
       GROUP BY p.title
       ORDER BY p.title ASC
-    ", params[:day]]
+    ", @current_day]
     
     @baker1 = Order
               .where(day: params[:day])
@@ -35,7 +35,7 @@ class OrdersController < ApplicationController
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN shops AS s ON o.shop_id = s.id
       ORDER BY s.name ASC, p.title ASC
-    ", params[:day]]
+    ", @current_day]
               
     logger.debug "delivery:" + @delivery.inspect
   end

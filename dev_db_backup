@@ -44,6 +44,43 @@ CREATE TABLE ar_internal_metadata (
 ALTER TABLE public.ar_internal_metadata OWNER TO postgres;
 
 --
+-- Name: lockdays; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE lockdays (
+    id integer NOT NULL,
+    day date,
+    locked boolean,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.lockdays OWNER TO postgres;
+
+--
+-- Name: lockdays_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE lockdays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.lockdays_id_seq OWNER TO postgres;
+
+--
+-- Name: lockdays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE lockdays_id_seq OWNED BY lockdays.id;
+
+
+--
 -- Name: orders; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -218,6 +255,13 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
+ALTER TABLE ONLY lockdays ALTER COLUMN id SET DEFAULT nextval('lockdays_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
 ALTER TABLE ONLY orders ALTER COLUMN id SET DEFAULT nextval('orders_id_seq'::regclass);
 
 
@@ -252,6 +296,22 @@ environment	development	2017-05-15 11:18:50.768712	2017-05-15 11:18:50.768712
 
 
 --
+-- Data for Name: lockdays; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY lockdays (id, day, locked, user_id, created_at, updated_at) FROM stdin;
+1	2017-05-26	t	1	2017-06-02 00:21:18.17059	2017-06-02 00:21:18.17059
+\.
+
+
+--
+-- Name: lockdays_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('lockdays_id_seq', 1, true);
+
+
+--
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -262,9 +322,16 @@ COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at
 1	1	1	2017-05-26	98	f	1	2017-05-26 06:06:30.204656	2017-06-01 01:30:00.567746
 37	7	1	2017-05-26	1	f	1	2017-06-01 05:43:24.356252	2017-06-01 05:43:24.356252
 7	3	1	2017-05-26	5	f	1	2017-05-31 11:26:33.849698	2017-05-31 11:26:33.849698
-38	5	1	2017-05-27	1	f	1	2017-06-01 05:49:51.658615	2017-06-01 05:49:51.658615
-39	7	1	2017-05-27	1	f	1	2017-06-01 06:58:07.681955	2017-06-01 06:58:07.681955
 40	1	1	2017-06-01	1	f	1	2017-06-01 06:59:49.556943	2017-06-01 06:59:49.556943
+39	7	1	2017-05-27	4	f	1	2017-06-01 06:58:07.681955	2017-06-01 12:58:13.367774
+44	4	1	2017-05-27	10	f	1	2017-06-02 00:43:13.880793	2017-06-02 00:43:13.880793
+46	7	2	2017-05-27	1	f	1	2017-06-03 11:29:07.095041	2017-06-03 11:29:07.095041
+47	1	2	2017-05-27	1	f	1	2017-06-03 11:30:03.880352	2017-06-03 11:30:03.880352
+48	3	2	2017-05-27	67	f	1	2017-06-03 11:30:11.162946	2017-06-03 11:30:11.162946
+49	4	2	2017-05-27	120	f	1	2017-06-03 11:30:23.298946	2017-06-03 11:30:23.298946
+45	2	1	2017-05-27	5	f	1	2017-06-03 03:12:47.61716	2017-06-03 12:01:58.856859
+50	3	1	2017-05-27	56	f	1	2017-06-03 12:02:18.837169	2017-06-03 12:02:18.837169
+51	5	1	2017-05-27	1	f	1	2017-06-03 12:02:27.537779	2017-06-03 12:02:27.537779
 \.
 
 
@@ -272,7 +339,7 @@ COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('orders_id_seq', 41, true);
+SELECT pg_catalog.setval('orders_id_seq', 51, true);
 
 
 --
@@ -306,6 +373,7 @@ COPY schema_migrations (version) FROM stdin;
 20170525061609
 20170526055854
 20170601064303
+20170602000840
 \.
 
 
@@ -333,7 +401,7 @@ SELECT pg_catalog.setval('shops_id_seq', 3, true);
 
 COPY users (id, name, email, password_digest, role, day, shop, created_at, updated_at) FROM stdin;
 2	Dan	danmcauliffe@outlook.com	$2a$10$6.skTIYDYHjEQ/wQjuPoLOsjJAfSV2Irlz.bsf/kPbGhZqpdHQjZ6	user	2017-05-26	Belconnen Bakery	2017-05-25 06:28:39.415435	2017-05-25 06:28:39.415435
-1	Mike	mike@mikebarb.net	$2a$10$pvfp7e9hoZ07fFxEB958Z.EtJ0kj7JJxFlTKGHbp6Fjud6lcWavAK	user	2017-05-27	Woden Bakery	2017-05-25 06:27:19.741916	2017-06-01 05:45:24.846793
+1	Mike	mike@mikebarb.net	$2a$10$bSLy6N6Gb2nARdEgUDfwxeuselbdlcM.Ez3es/fJTVzT46gVOul2m	user	2017-05-27	Woden Bakery	2017-05-25 06:27:19.741916	2017-06-05 00:24:47.869733
 \.
 
 
@@ -350,6 +418,14 @@ SELECT pg_catalog.setval('users_id_seq', 2, true);
 
 ALTER TABLE ONLY ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: lockdays_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY lockdays
+    ADD CONSTRAINT lockdays_pkey PRIMARY KEY (id);
 
 
 --
@@ -390,6 +466,20 @@ ALTER TABLE ONLY shops
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_lockdays_on_day; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_lockdays_on_day ON lockdays USING btree (day);
+
+
+--
+-- Name: index_lockdays_on_user_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_lockdays_on_user_id ON lockdays USING btree (user_id);
 
 
 --
@@ -441,6 +531,14 @@ ALTER TABLE ONLY orders
 
 ALTER TABLE ONLY orders
     ADD CONSTRAINT fk_rails_dfb33b2de0 FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: fk_rails_e1f93d0f91; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY lockdays
+    ADD CONSTRAINT fk_rails_e1f93d0f91 FOREIGN KEY (user_id) REFERENCES users(id);
 
 
 --

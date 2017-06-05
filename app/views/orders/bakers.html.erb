@@ -2,9 +2,10 @@
 
 <h1>Bake to fill the Orders to</h1>
 <h1>Deliver On : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
-<p> This table for diagnositics only</p>
 
 
+
+<p>This table is the expected output - data can be applied in any format.</p>
 <table>
   <thead>
     <tr>
@@ -23,7 +24,7 @@
   </tbody>
 </table>
 
-<p>This table is the expected output - data can be applied in any format.</p>
+<p> This table for diagnositics only</p>
 <table>
     <thead>
     <tr>
@@ -46,7 +47,6 @@
 </table>
 
 <br>
-
-<%= link_to 'New Order', new_order_path %>
-<%= link_to 'Edit Order', ordersedit_path %>
+<%= link_to 'Show delivery page', ordersdelivery_path %>
+<%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
 

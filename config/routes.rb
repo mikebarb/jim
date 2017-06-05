@@ -5,8 +5,10 @@ Rails.application.routes.draw do
 
   get 'ordersedit', to: 'orders#indexedit'
   post 'orders/:id', to: 'orders#update'
-  get 'ordersbakers/:day', to: 'orders#bakers'
-  get 'ordersdelivery/:day', to: 'orders#delivery'
+  get 'ordersbakers', to: 'orders#bakers'
+  get 'ordersdelivery', to: 'orders#delivery'
+  #get 'ordersbakers/:day', to: 'orders#bakers'
+  #get 'ordersdelivery/:day', to: 'orders#delivery'
   resources :orders
   #get 'sessions/new'
   #get 'sessions/create'
