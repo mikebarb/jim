@@ -26,6 +26,30 @@ class OrdersController < ApplicationController
     logger.debug "lockday:" + @lockday.inspect
   end
 
+ # GET /bakerdoes
+  def bakerdoes
+    @bakerdoes = Order.find_by_sql ["
+      SELECT sum(quantity * r.amount) as totalqty, i.item
+      FROM orders AS o
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN recipes AS r ON p.id = r.product_id
+      INNER JOIN ingredients AS i ON r.ingredient_id = i.id
+      GROUP BY i.item
+    ", @current_day]
+
+    @bakerdoes2 = Order.find_by_sql ["
+      SELECT quantity as totalqty, p.title, i.item, r.amount
+      FROM orders AS o
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN recipes AS r ON p.id = r.product_id
+      INNER JOIN ingredients AS i ON r.ingredient_id = i.id
+    ", @current_day]
+
+
+    logger.debug "bakerdoes:" + @bakerdoes.inspect
+              
+  end
+
   # GET /delivery
   def delivery
     logger.debug "delivery:" + @delivery.inspect
@@ -64,6 +88,7 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     @orders = Order.all
+    .order(:day, :shop_id, :product_id)
   end
 
   # GET /orders/1

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :recipes
+  resources :ingredients
   resources :lockdays
   get 'reports/baker'
   get 'reports/deliver'
@@ -6,6 +8,7 @@ Rails.application.routes.draw do
   get 'ordersedit', to: 'orders#indexedit'
   post 'orders/:id', to: 'orders#update'
   get 'ordersbakers', to: 'orders#bakers'
+  get 'ordersbakerdoes', to: 'orders#bakerdoes'
   get 'ordersdelivery', to: 'orders#delivery'
   #get 'ordersbakers/:day', to: 'orders#bakers'
   #get 'ordersdelivery/:day', to: 'orders#delivery'
@@ -28,7 +31,7 @@ Rails.application.routes.draw do
   resources :shops
   resources :products
   
-  root 'product#index', as: 'product_index'
+  root 'orders#indexedit'
   
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

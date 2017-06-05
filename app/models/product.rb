@@ -5,4 +5,6 @@ class Product < ApplicationRecord
     
     has_many :orders
     has_many :shops, through: :orders
+    has_many :recipes
+    has_many :ingredients, through: :recipes
 end

@@ -1,0 +1,57 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Doe required to fill the Orders to</h1>
+<h1>Deliver On : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
+
+
+
+<p>This table is the expected output - data can be applied in any format.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Ingredient</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bakerdoes.each do |bakerdoe| %>
+      <tr>
+        <td><%= bakerdoe.item %></td>
+        <td><%= bakerdoe.totalqty %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<p>This table is for diagnostics.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Ingredient</th>
+      <th>Recipie Amount</th>
+      
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bakerdoes2.each do |bakerdoe2| %>
+      <tr>
+        <td><%= bakerdoe2.title %></td>
+        <td><%= bakerdoe2.totalqty %></td>
+        <td><%= bakerdoe2.item %></td>
+        <td><%= bakerdoe2.amount %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<br>
+<%= link_to 'Show delivery page', ordersdelivery_path %>
+<%= link_to 'Show bakers page', ordersbakers_path %>
+<%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
+

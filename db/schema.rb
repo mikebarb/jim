@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170602000840) do
+ActiveRecord::Schema.define(version: 20170605020823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string   "item"
+    t.string   "unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item"], name: "index_ingredients_on_item", using: :btree
+  end
 
   create_table "lockdays", force: :cascade do |t|
     t.date     "day"
@@ -50,6 +58,17 @@ ActiveRecord::Schema.define(version: 20170602000840) do
     t.datetime "updated_at",                          null: false
   end
 
+  create_table "recipes", force: :cascade do |t|
+    t.integer  "product_id"
+    t.integer  "ingredient_id"
+    t.integer  "amount"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["ingredient_id"], name: "index_recipes_on_ingredient_id", using: :btree
+    t.index ["product_id", "ingredient_id"], name: "index_recipes_on_product_id_and_ingredient_id", unique: true, using: :btree
+    t.index ["product_id"], name: "index_recipes_on_product_id", using: :btree
+  end
+
   create_table "shops", force: :cascade do |t|
     t.string   "name"
     t.text     "address"
@@ -78,4 +97,6 @@ ActiveRecord::Schema.define(version: 20170602000840) do
   add_foreign_key "orders", "products"
   add_foreign_key "orders", "shops"
   add_foreign_key "orders", "users"
+  add_foreign_key "recipes", "ingredients"
+  add_foreign_key "recipes", "products"
 end
