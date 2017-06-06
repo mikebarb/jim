@@ -88,6 +88,51 @@ class OrdersController < ApplicationController
 
   # GET /ordersedit
   def indexedit
+  # first up - check if there are already orders for this day
+  # if not, give the user a chance to clone from an existing order
+    @orders = Order.all
+    .where("day = ? AND shop_id = ?", @current_day, @current_shop_id)
+
+    logger.debug "@orders: " + @orders.inspect
+
+    if @orders.empty? then              # there are no orders for this day
+      logger.debug "today's order array is empty."
+      @noorders = true
+      logger.debug "parameters: " + params.inspect
+      @copy_from_day = params[:copyfrom]
+      logger.debug "@copy_from_day: " + @copy_from_day.inspect
+      
+      unless @copy_from_day.blank?        # parameters has provided a day to copy from
+        logger.debug "copy_from_day parameters present " + @copy_from_day.inspect
+        @orders_from = Order
+                       .where("day =? AND shop_id = ?", @copy_from_day, @current_shop_id)
+        logger.debug "@orders_from: " + @orders_from.inspect
+        if @orders_from.empty?         # make sure there is somethign to copy
+          @noorders = true
+          @copymessage = "You tried to copy from a day (" + @copy_from_day + ") that has no orders!!!"
+          logger.debug "You tried to copy from a day that has no orders!!!" + @copy_from_day
+        else                          # now proceed with the copy
+          logger.debug "copy the orders from " + params[:copyfrom] + " to " + params[:copyto];
+          @orders_from.each do |order|
+            @order_new = Order.new
+            @order_new.product_id = order.product_id
+            @order_new.shop_id = order.shop_id
+            @order_new.quantity = order.quantity
+            @order_new.locked = false
+            @order_new.day = @current_day
+            @order_new.user_id = @current_user_id
+            @order_new.save
+          end
+          @noorders = false           # orders now present for today
+        end
+      end
+    else
+      logger.debug "this order array has content."
+      @noorders = false
+    end
+    logger.debug "@noorders: " + @noorders.inspect
+    logger.debug "@copymessage: " + @copymessage.inspect
+
     @products = Product.find_by_sql [ "
       SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id
       FROM products AS p
@@ -96,6 +141,7 @@ class OrdersController < ApplicationController
       AND o.day = ? AND o.shop_id = ?
       ORDER BY p.title
     ", @current_day, @current_shop_id ]
+
     
     @lockday = Lockday
              .where(day: @current_day)

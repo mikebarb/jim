@@ -9,6 +9,23 @@
 
 <h1>Order for Products - index_edit</h1>
 
+<% if @noorders == true then %>
+  <div class=checkordersempty>
+    <form action=<%= ordersedit_path %> method="get" >
+      <% if @copymessage.nil? %>
+        <h2>do you want to copy a previous order to start off - select the day and click copy?</h2>
+      <% else %>
+        <h2><%= @copymessage %></h2>
+      <% end %>
+      Copy Order from:<input type="date" name="copyfrom"><br>
+      Copy  Order  to:<input type="date" value=<%= @current_day %> name="copyto" readonly><br>
+      <button type="submit" value="Submit">Copy</button>
+      <button class="noclonebutton" type="button" value="Button" >No Thanks</button>
+    </form>
+    <br>
+  </div>
+<% end %>
+
 <table>
   <% @products.each do |product| %>
     <tr class="product" id="<%= product.product_id %>">

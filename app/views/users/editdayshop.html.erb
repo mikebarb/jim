@@ -13,7 +13,11 @@
   
   <div class="field">
     <%= f.label :day %>
-    <%= f.date_select :day %>
+    <% if false %>
+      </div><%= f.date_select :day %>
+    <% else %>
+      <input type="date" name="user[day]" value="<%= user.day %>">
+    <% end %>
   </div>
 
   <div class="field">

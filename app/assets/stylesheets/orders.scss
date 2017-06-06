@@ -27,10 +27,27 @@
   color: black;
   background-color: #afa;
   line-height: 18px;
+  width: 100%;
   //border:1px solid black;
 }
 .origqty {
-  display: inline;
+  display: none;
+  margin: 5;
+  color: black;
+  background-color: #afa;
+  line-height: 18px;
+  //border:1px solid black;
+}
+.order_id {
+  display: none;
+  margin: 5;
+  color: black;
+  background-color: #afa;
+  line-height: 18px;
+  //border:1px solid black;
+}
+.product_id {
+  display: none;
   margin: 5;
   color: black;
   background-color: #afa;

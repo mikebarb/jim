@@ -85,7 +85,9 @@ class UsersController < ApplicationController
     @myshop = user_params[:shop]
     logger.debug "@myshop:" + @myshop.inspect
 
-    @myday =Date.new @myparams["day(1i)"].to_i, @myparams["day(2i)"].to_i, @myparams["day(3i)"].to_i
+    #@myday =Date.new @myparams["day(1i)"].to_i, @myparams["day(2i)"].to_i, @myparams["day(3i)"].to_i
+    @myday = @myparams["day"]
+    logger.debug "@myparams day:" + @myparams["day"]
     logger.debug "@myday:" + @myday.inspect
     
     if @user.shop != @myshop

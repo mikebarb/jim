@@ -8,6 +8,11 @@
 
 $(document).ready(function() {
     console.log("document ready");
+
+    $(".noclonebutton").click(function(){
+        console.log("noclonebutton clicked");
+        $(this).parents(".checkordersempty").empty();
+    });
   
     $(".qty").on("focusout keypress", function(e){
         if(e.type == "keypress"){
@@ -132,7 +137,3 @@ $(document).ready(function() {
     });
 });
 
-function processchange(){
-    console.log("process change being executed");
-}
-    
