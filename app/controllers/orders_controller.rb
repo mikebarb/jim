@@ -2,7 +2,6 @@ class OrdersController < ApplicationController
   before_action :check_login
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
-
   # GET /baker
   def bakers
     logger.debug "bakers:" + @bakers.inspect
@@ -16,12 +15,12 @@ class OrdersController < ApplicationController
     ", @current_day]
     
     @baker1 = Order
-              .where(day: params[:day])
+              .where("day = ?", params[:day])
               .joins(:product, :shop)
               .order(:product_id)
               
     @lockday = Lockday
-                 .where(day: params[:day])
+                 .where("day = ?", params[:day])
               
     logger.debug "lockday:" + @lockday.inspect
   end
@@ -45,9 +44,7 @@ class OrdersController < ApplicationController
       INNER JOIN ingredients AS i ON r.ingredient_id = i.id
     ", @current_day]
 
-
     logger.debug "bakerdoes:" + @bakerdoes.inspect
-              
   end
 
   # GET /delivery
@@ -83,7 +80,6 @@ class OrdersController < ApplicationController
                     locals: {:delivery => @delivery}
       end
     end
-    
   end
 
   # GET /ordersedit
@@ -113,15 +109,26 @@ class OrdersController < ApplicationController
           logger.debug "You tried to copy from a day that has no orders!!!" + @copy_from_day
         else                          # now proceed with the copy
           logger.debug "copy the orders from " + params[:copyfrom] + " to " + params[:copyto];
+          # determine fields for updating - copied orders and logging
+          logfields = Hash.new
+          logfields[:day] = @current_day
+          logfields[:user_id] = @current_user_id
+          logfields[:shop_id] = @current_shop_id
+          logger.debug "logfields hash: " + logfields.inspect
           @orders_from.each do |order|
-            @order_new = Order.new
+            @order_new = Order.new(logfields)
             @order_new.product_id = order.product_id
-            @order_new.shop_id = order.shop_id
             @order_new.quantity = order.quantity
             @order_new.locked = false
-            @order_new.day = @current_day
-            @order_new.user_id = @current_user_id
+            logger.debug "@order_new - just before saving: " + @order_new.inspect
             @order_new.save
+            # now for the audit log on the Order updates, creates and deletes
+            @log = Orderlog.new(logfields)
+            @log.product_id = order.product_id
+            @log.quantity = order.quantity
+            @log.oldquantity = 0
+            logger.debug "logging record: " + @log.inspect
+            @log.save
           end
           @noorders = false           # orders now present for today
         end
@@ -142,11 +149,10 @@ class OrdersController < ApplicationController
       ORDER BY p.title
     ", @current_day, @current_shop_id ]
 
-    
     @lockday = Lockday
-             .where(day: @current_day)
+             .where("day = ?", @current_day)
     @locked = @lockday.count
-          
+
     logger.debug "lockday:" + @lockday.inspect
     logger.debug "locked:" +  @locked.inspect
     logger.debug "products:" + @products.inspect
@@ -177,9 +183,19 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
-
+    logger.debug "@order - passed in: " + @order.inspect
+    # now create the order log record
+    @log = Orderlog.new
+    @log.day = @order.day
+    @log.user_id = @order.user_id
+    @log.shop_id = @order.shop_id
+    @log.product_id = @order.product_id
+    @log.quantity = @order.quantity
+    @log.oldquantity = 0
+    logger.debug "logging record: " + @log.inspect
     respond_to do |format|
       if @order.save
+        @log.save
         format.html { redirect_to @order, notice: 'Order was successfully created.' }
         format.json { render :show, status: :created, location: @order }
       else
@@ -194,11 +210,22 @@ class OrdersController < ApplicationController
   def update
     logger.debug "controller orders update called"
     logger.debug "@order-1=" + @order.inspect
-    @order.quantity = params[:quantity]
+    
+    # now create the order log record
+    @log = Orderlog.new
+    @log.oldquantity = @order.quantity
+    #@order.quantity = params[:quantity]
     logger.debug "@order-2=" + @order.inspect
     respond_to do |format|
       if @order.update(order_params)
-      #if @order.update(@order.attributes)
+        logger.debug "@order - after update: " + @order.inspect
+        @log.day = @order.day
+        @log.user_id = @order.user_id
+        @log.shop_id = @order.shop_id
+        @log.product_id = @order.product_id
+        @log.quantity = @order.quantity
+        logger.debug "logging record: " + @log.inspect
+        @log.save
         logger.debug "Order controller - successful update"
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
         format.js
@@ -214,7 +241,19 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
+    logger.debug "@order: " + @order.inspect
+    # now create the order log record
+    @log = Orderlog.new
+    @log.day = @order.day
+    @log.user_id = @order.user_id
+    @log.shop_id = @order.shop_id
+    @log.product_id = @order.product_id
+    @log.quantity = 0
+    @log.oldquantity = @order.quantity
+    logger.debug "logging record: " + @log.inspect
     @order.destroy
+    @log.save
+    logger.debug "logging record after save: " + @log.inspect
     respond_to do |format|
       format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
       format.json { head :no_content }

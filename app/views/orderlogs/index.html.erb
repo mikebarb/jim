@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Orderlogs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Updated</th>
+      <th>Shop</th>
+      <th>Delivery Day</th>
+      <th>Done by</th>
+      <th>Product</th>
+      <th>Now</th>
+      <th>Was</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orderlogs.each do |orderlog| %>
+      <tr>
+        <td><%= orderlog.id %></td>
+        <td><%= orderlog.updated %></td>
+        <td><%= orderlog.shop_name %></td>
+        <td><%= orderlog.day %></td>
+        <td><%= orderlog.user_name %></td>
+        <td><%= orderlog.product_name %></td>
+        <td><%= orderlog.quantity %></td>
+        <td><%= orderlog.oldquantity %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

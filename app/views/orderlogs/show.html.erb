@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @orderlog.product %>
+</p>
+
+<p>
+  <strong>Shop:</strong>
+  <%= @orderlog.shop %>
+</p>
+
+<p>
+  <strong>Day:</strong>
+  <%= @orderlog.day %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @orderlog.user %>
+</p>
+
+<%= link_to 'Edit', edit_orderlog_path(@orderlog) %> |
+<%= link_to 'Back', orderlogs_path %>

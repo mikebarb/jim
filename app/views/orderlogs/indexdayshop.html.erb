@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<table>
+  <tr><td>user</td><td><%= @current_user %></td><td id="user_id"><%= @current_user_id %></td></tr>
+  <tr><td>shop</td><td><%= @current_shop %></td><td id="shop_id"><%= @current_shop_id %></td></tr>
+  <tr><td>deliver</td><td id="day"><%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</td><td></td></tr>
+</table>
+
+<h1>Orderlogs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Updated</th>
+      <th>Shop</th>
+      <th>Delivery Day</th>
+      <th>Done by</th>
+      <th>Product</th>
+      <th>Now</th>
+      <th>Was</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orderlogs.each do |orderlog| %>
+      <tr>
+        <td><%= orderlog.id %></td>
+        <td><%= orderlog.updated %></td>
+        <td><%= orderlog.shop_name %></td>
+        <td><%= orderlog.day %></td>
+        <td><%= orderlog.user_name %></td>
+        <td><%= orderlog.product_name %></td>
+        <td><%= orderlog.quantity %></td>
+        <td><%= orderlog.oldquantity %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Show entire order logs', orderlogs_path %>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: 
+  shop: 
+  day: 2017-06-06
+  user: 
+
+two:
+  product: 
+  shop: 
+  day: 2017-06-06
+  user: 

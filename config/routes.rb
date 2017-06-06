@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'orderlogdayshop', to: 'orderlogs#indexdayshop'
+  resources :orderlogs
   resources :recipes
   resources :ingredients
   resources :lockdays

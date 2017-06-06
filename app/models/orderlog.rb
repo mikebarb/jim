@@ -1,0 +1,2 @@
+class Orderlog < ApplicationRecord
+end
