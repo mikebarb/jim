@@ -487,6 +487,7 @@ COPY orderlogs (id, product_id, shop_id, day, user_id, created_at, updated_at, q
 11	7	1	2017-05-29	1	2017-06-06 10:00:17.408851	2017-06-06 10:00:17.408851	0	7
 12	5	1	2017-05-29	1	2017-06-06 10:03:08.394919	2017-06-06 10:03:08.394919	1	0
 13	5	1	2017-05-29	1	2017-06-06 10:04:23.36633	2017-06-06 10:04:23.36633	2	1
+14	5	3	2017-05-29	1	2017-06-07 02:42:27.375508	2017-06-07 02:42:27.375508	12	0
 \.
 
 
@@ -494,7 +495,7 @@ COPY orderlogs (id, product_id, shop_id, day, user_id, created_at, updated_at, q
 -- Name: orderlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('orderlogs_id_seq', 13, true);
+SELECT pg_catalog.setval('orderlogs_id_seq', 14, true);
 
 
 --
@@ -555,6 +556,7 @@ COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at
 117	3	1	2017-05-29	56	f	1	2017-06-06 07:43:26.248838	2017-06-06 07:43:26.248838
 119	1	1	2017-05-29	9	f	1	2017-06-06 07:43:26.320061	2017-06-06 07:43:26.320061
 122	5	1	2017-05-29	2	f	1	2017-06-06 10:03:08.37189	2017-06-06 10:04:23.325733
+123	5	3	2017-05-29	12	f	1	2017-06-07 02:42:27.36135	2017-06-07 02:42:27.36135
 \.
 
 
@@ -562,7 +564,7 @@ COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('orders_id_seq', 122, true);
+SELECT pg_catalog.setval('orders_id_seq', 123, true);
 
 
 --
@@ -649,7 +651,7 @@ SELECT pg_catalog.setval('shops_id_seq', 3, true);
 
 COPY users (id, name, email, password_digest, role, day, shop, created_at, updated_at) FROM stdin;
 2	Dan	danmcauliffe@outlook.com	$2a$10$6.skTIYDYHjEQ/wQjuPoLOsjJAfSV2Irlz.bsf/kPbGhZqpdHQjZ6	user	2017-05-26	Belconnen Bakery	2017-05-25 06:28:39.415435	2017-05-25 06:28:39.415435
-1	Mike	mike@mikebarb.net	$2a$10$bSLy6N6Gb2nARdEgUDfwxeuselbdlcM.Ez3es/fJTVzT46gVOul2m	user	2017-05-29	Woden Bakery	2017-05-25 06:27:19.741916	2017-06-06 07:21:45.021256
+1	Mike	mike@mikebarb.net	$2a$10$bSLy6N6Gb2nARdEgUDfwxeuselbdlcM.Ez3es/fJTVzT46gVOul2m	user	2017-05-29	Civic	2017-05-25 06:27:19.741916	2017-06-07 02:42:16.157256
 \.
 
 

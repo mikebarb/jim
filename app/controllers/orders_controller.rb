@@ -2,6 +2,77 @@ class OrdersController < ApplicationController
   before_action :check_login
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
+  # GET /productshop
+  def productshop
+    #logger.debug "in productshop"
+
+    @prodshop = Order.find_by_sql ["
+      SELECT o.id, p.title, s.name, o.quantity, p.price
+      FROM orders AS o
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN shops AS s ON o.shop_id = s.id
+    ", @current_day]
+    #logger.debug "@prodshop: " + @prodshop.inspect 
+
+    @colheaders = Order.find_by_sql ["
+      SELECT DISTINCT ON (s.name) o.id, s.name, o.shop_id
+      FROM orders AS o
+      INNER JOIN shops AS s 
+      ON o.shop_id = s.id AND o.day = ?
+      ORDER BY s.name ASC
+    ", @current_day]
+    #logger.debug "@colheaders: " + @colheaders.inspect 
+
+    @rowheaders = Order.find_by_sql ["
+      SELECT DISTINCT ON (p.title) p.title, o.id, o.product_id
+      FROM orders AS o
+      INNER JOIN products AS p 
+      ON o.product_id = p.id AND o.day = ?
+      ORDER BY p.title ASC
+    ", @current_day]
+    #logger.debug "@rowheaders: " + @rowheaders.inspect 
+
+    @summary = Array.new(2 + @rowheaders.count){Array.new(2 + @colheaders.count){Hash.new()}}
+
+    i = 1
+    @rowindex = Hash.new
+    @rowheaders.each do |entry|
+      i += 1
+      thisproduct=entry.title
+      @summary[i][1]["value"] = 0
+      @summary[i][0]["value"] = thisproduct
+      @rowindex[thisproduct] = i
+    end
+    #logger.debug "@rowindex: " + @rowindex.inspect
+    
+    j = 1
+    @colindex = Hash.new
+    @colheaders.each do |entry|
+      j += 1
+      thisshop=entry.name
+      @summary[1][j]["value"] = 0
+      @summary[0][j]["value"] = thisshop
+      @colindex[thisshop] = j
+    end
+    #logger.debug "@colindex: " + @colindex.inspect
+    
+    #misc headers
+    @summary[1][1]["value"] = "Totals"
+    @summary[1][0]["value"] = "Products"
+    @summary[0][1]["value"] = "Shops"
+    
+    
+    @prodshop.each do |entry|
+      thisprod = entry.title    #row - i
+      thisshop = entry.name     #col - j
+      @summary[@rowindex[thisprod]][@colindex[thisshop]]["value"]   = entry.quantity
+      @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.price
+      @summary[@rowindex[thisprod]][1]["value"] += entry.quantity
+    end
+    #logger.debug "@summary: " + @summary.inspect
+  end
+
+
   # GET /baker
   def bakers
     logger.debug "bakers:" + @bakers.inspect

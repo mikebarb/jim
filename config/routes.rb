@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   get 'ordersedit', to: 'orders#indexedit'
   post 'orders/:id', to: 'orders#update'
+  get 'ordersproductshops', to: 'orders#productshop'
   get 'ordersbakers', to: 'orders#bakers'
   get 'ordersbakerdoes', to: 'orders#bakerdoes'
   get 'ordersdelivery', to: 'orders#delivery'

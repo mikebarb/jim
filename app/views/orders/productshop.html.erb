@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Products by Shops Summary of Orders to</h1>
+<h1>Deliver On : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
+
+<table>
+  <% @summary.each do |rows| %>
+    <tr>
+    <% rows.each do |cells| %>
+      <td>
+        <% if cells.key?("value") then %>     
+          <%= cells["value"].to_s %>
+        <% end %>
+      </td>
+    <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<br>
+<%= link_to 'Show delivery page', ordersdelivery_path %>
+<%= link_to 'Show baker doe page', ordersbakerdoes_path %>
+<%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
+
