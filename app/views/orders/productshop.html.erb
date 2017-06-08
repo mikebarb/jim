@@ -4,11 +4,12 @@
 <h1>Deliver On : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
 
 <table>
+  <% i = 0 %>
   <% @summary.each do |rows| %>
     <tr>
     <% rows.each do |cells| %>
       <td>
-        <% if cells.key?("value") then %>     
+        <% if cells.key?("value") then %>
           <%= cells["value"].to_s %>
         <% end %>
       </td>

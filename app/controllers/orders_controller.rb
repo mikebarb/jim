@@ -69,6 +69,13 @@ class OrdersController < ApplicationController
       @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.price
       @summary[@rowindex[thisprod]][1]["value"] += entry.quantity
     end
+    j=1
+    # format the currency cells
+    @colheaders.each do |entry|
+      j += 1
+      @summary[1][j]["value"] = "$" + sprintf("%.2f", @summary[1][j]["value"])
+    end
+    
     #logger.debug "@summary: " + @summary.inspect
   end
 
@@ -106,21 +113,10 @@ class OrdersController < ApplicationController
       INNER JOIN ingredients AS i ON r.ingredient_id = i.id
       GROUP BY i.item
     ", @current_day]
-
-    @bakerdoes2 = Order.find_by_sql ["
-      SELECT quantity as totalqty, p.title, i.item, r.amount
-      FROM orders AS o
-      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
-      INNER JOIN recipes AS r ON p.id = r.product_id
-      INNER JOIN ingredients AS i ON r.ingredient_id = i.id
-    ", @current_day]
-
-    logger.debug "bakerdoes:" + @bakerdoes.inspect
   end
 
   # GET /delivery
   def delivery
-    logger.debug "delivery:" + @delivery.inspect
     @delivery = Order.find_by_sql ["
       SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
       FROM orders AS o
@@ -128,8 +124,6 @@ class OrdersController < ApplicationController
       INNER JOIN shops AS s ON o.shop_id = s.id
       ORDER BY s.name ASC, p.title ASC
     ", @current_day]
-              
-    logger.debug "delivery:" + @delivery.inspect
   end
 
   # GET /deliverypdf
@@ -141,8 +135,6 @@ class OrdersController < ApplicationController
       INNER JOIN shops AS s ON o.shop_id = s.id
       ORDER BY s.name ASC, p.title ASC
     ", @current_day]
-              
-    logger.debug "delivery:" + @delivery.inspect
     
     respond_to do |format|
       format.html do
@@ -160,56 +152,56 @@ class OrdersController < ApplicationController
     @orders = Order.all
     .where("day = ? AND shop_id = ?", @current_day, @current_shop_id)
 
-    logger.debug "@orders: " + @orders.inspect
+    #logger.debug "@orders: " + @orders.inspect
 
     if @orders.empty? then              # there are no orders for this day
-      logger.debug "today's order array is empty."
+      #logger.debug "today's order array is empty."
       @noorders = true
-      logger.debug "parameters: " + params.inspect
+      #logger.debug "parameters: " + params.inspect
       @copy_from_day = params[:copyfrom]
-      logger.debug "@copy_from_day: " + @copy_from_day.inspect
+      #logger.debug "@copy_from_day: " + @copy_from_day.inspect
       
       unless @copy_from_day.blank?        # parameters has provided a day to copy from
-        logger.debug "copy_from_day parameters present " + @copy_from_day.inspect
+        #logger.debug "copy_from_day parameters present " + @copy_from_day.inspect
         @orders_from = Order
                        .where("day =? AND shop_id = ?", @copy_from_day, @current_shop_id)
-        logger.debug "@orders_from: " + @orders_from.inspect
+        #logger.debug "@orders_from: " + @orders_from.inspect
         if @orders_from.empty?         # make sure there is somethign to copy
           @noorders = true
           @copymessage = "You tried to copy from a day (" + @copy_from_day + ") that has no orders!!!"
-          logger.debug "You tried to copy from a day that has no orders!!!" + @copy_from_day
+          #logger.debug "You tried to copy from a day that has no orders!!!" + @copy_from_day
         else                          # now proceed with the copy
-          logger.debug "copy the orders from " + params[:copyfrom] + " to " + params[:copyto];
+          #logger.debug "copy the orders from " + params[:copyfrom] + " to " + params[:copyto];
           # determine fields for updating - copied orders and logging
           logfields = Hash.new
           logfields[:day] = @current_day
           logfields[:user_id] = @current_user_id
           logfields[:shop_id] = @current_shop_id
-          logger.debug "logfields hash: " + logfields.inspect
+          #logger.debug "logfields hash: " + logfields.inspect
           @orders_from.each do |order|
             @order_new = Order.new(logfields)
             @order_new.product_id = order.product_id
             @order_new.quantity = order.quantity
             @order_new.locked = false
-            logger.debug "@order_new - just before saving: " + @order_new.inspect
+            #logger.debug "@order_new - just before saving: " + @order_new.inspect
             @order_new.save
             # now for the audit log on the Order updates, creates and deletes
             @log = Orderlog.new(logfields)
             @log.product_id = order.product_id
             @log.quantity = order.quantity
             @log.oldquantity = 0
-            logger.debug "logging record: " + @log.inspect
+            #logger.debug "logging record: " + @log.inspect
             @log.save
           end
           @noorders = false           # orders now present for today
         end
       end
     else
-      logger.debug "this order array has content."
+      #logger.debug "this order array has content."
       @noorders = false
     end
-    logger.debug "@noorders: " + @noorders.inspect
-    logger.debug "@copymessage: " + @copymessage.inspect
+    #logger.debug "@noorders: " + @noorders.inspect
+    #logger.debug "@copymessage: " + @copymessage.inspect
 
     @products = Product.find_by_sql [ "
       SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id
@@ -224,9 +216,9 @@ class OrdersController < ApplicationController
              .where("day = ?", @current_day)
     @locked = @lockday.count
 
-    logger.debug "lockday:" + @lockday.inspect
-    logger.debug "locked:" +  @locked.inspect
-    logger.debug "products:" + @products.inspect
+    #logger.debug "lockday:" + @lockday.inspect
+    #logger.debug "locked:" +  @locked.inspect
+    #logger.debug "products:" + @products.inspect
   end
 
   # GET /orders

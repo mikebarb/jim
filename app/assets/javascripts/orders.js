@@ -49,7 +49,7 @@ $(document).ready(function() {
             console.log("myuser_id:" + myuser_id);
             $.ajax({
                 type: 'POST',
-                url: "https://jim-micmac.c9users.io/orders",
+                url: "https://baker-micmac.c9users.io/orders",
                 data: {
                         order: {
                                   product_id: myproduct_id,
@@ -94,7 +94,7 @@ $(document).ready(function() {
             console.log("myorder_id:" + myorder_id);
             $.ajax({
                 type: 'DELETE',
-                url: "https://jim-micmac.c9users.io/orders/" + myorder_id,
+                url: "https://baker-micmac.c9users.io/orders/" + myorder_id,
                 dataType: 'json',
                 success: function(){
                     $(eleorigqty).text("");
@@ -114,7 +114,7 @@ $(document).ready(function() {
             console.log("now call ajax to update quantity on existing record");
             $.ajax({
                 type: 'POST',
-                url: "https://jim-micmac.c9users.io/orders/" + Number($(this).attr("id")),
+                url: "https://baker-micmac.c9users.io/orders/" + Number($(this).attr("id")),
     
                 data: {
                         order: {

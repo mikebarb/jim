@@ -1,0 +1,995 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.ar_internal_metadata OWNER TO postgres;
+
+--
+-- Name: ingredients; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ingredients (
+    id integer NOT NULL,
+    item character varying,
+    unit character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.ingredients OWNER TO postgres;
+
+--
+-- Name: ingredients_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE ingredients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ingredients_id_seq OWNER TO postgres;
+
+--
+-- Name: ingredients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE ingredients_id_seq OWNED BY ingredients.id;
+
+
+--
+-- Name: lockdays; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE lockdays (
+    id integer NOT NULL,
+    day date,
+    locked boolean,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.lockdays OWNER TO postgres;
+
+--
+-- Name: lockdays_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE lockdays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.lockdays_id_seq OWNER TO postgres;
+
+--
+-- Name: lockdays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE lockdays_id_seq OWNED BY lockdays.id;
+
+
+--
+-- Name: orderlogs; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE orderlogs (
+    id integer NOT NULL,
+    product_id integer,
+    shop_id integer,
+    day date,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    quantity integer,
+    oldquantity integer
+);
+
+
+ALTER TABLE public.orderlogs OWNER TO postgres;
+
+--
+-- Name: orderlogs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE orderlogs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.orderlogs_id_seq OWNER TO postgres;
+
+--
+-- Name: orderlogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE orderlogs_id_seq OWNED BY orderlogs.id;
+
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE orders (
+    id integer NOT NULL,
+    product_id integer,
+    shop_id integer,
+    day date,
+    quantity integer,
+    locked boolean,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.orders_id_seq OWNER TO postgres;
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE orders_id_seq OWNED BY orders.id;
+
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE products (
+    id integer NOT NULL,
+    title character varying,
+    description text,
+    leadtime integer,
+    price numeric(8,2),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.products OWNER TO postgres;
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.products_id_seq OWNER TO postgres;
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE products_id_seq OWNED BY products.id;
+
+
+--
+-- Name: recipes; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE recipes (
+    id integer NOT NULL,
+    product_id integer,
+    ingredient_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    amount numeric(12,4)
+);
+
+
+ALTER TABLE public.recipes OWNER TO postgres;
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE recipes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipes_id_seq OWNER TO postgres;
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE recipes_id_seq OWNED BY recipes.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO postgres;
+
+--
+-- Name: shops; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE shops (
+    id integer NOT NULL,
+    name character varying,
+    address text,
+    suburb character varying,
+    postcode character varying,
+    contact character varying,
+    phone character varying,
+    email character varying,
+    note text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.shops OWNER TO postgres;
+
+--
+-- Name: shops_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE shops_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.shops_id_seq OWNER TO postgres;
+
+--
+-- Name: shops_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE shops_id_seq OWNED BY shops.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    name character varying,
+    email character varying,
+    password_digest character varying,
+    role character varying,
+    day date,
+    shop character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ingredients ALTER COLUMN id SET DEFAULT nextval('ingredients_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY lockdays ALTER COLUMN id SET DEFAULT nextval('lockdays_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orderlogs ALTER COLUMN id SET DEFAULT nextval('orderlogs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders ALTER COLUMN id SET DEFAULT nextval('orders_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY products ALTER COLUMN id SET DEFAULT nextval('products_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY recipes ALTER COLUMN id SET DEFAULT nextval('recipes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY shops ALTER COLUMN id SET DEFAULT nextval('shops_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: ar_internal_metadata; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ar_internal_metadata (key, value, created_at, updated_at) FROM stdin;
+environment	development	2017-05-15 11:18:50.768712	2017-05-15 11:18:50.768712
+\.
+
+
+--
+-- Data for Name: ingredients; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ingredients (id, item, unit, created_at, updated_at) FROM stdin;
+3	White	Kg	2017-06-05 01:29:10.010784	2017-06-05 01:29:10.010784
+1	Pastry Block	Block	2017-06-05 01:28:13.926279	2017-06-06 06:08:48.167522
+4	White Sour	Kg	2017-06-06 06:09:26.276826	2017-06-06 06:09:26.276826
+5	Rye Sour	Kg	2017-06-06 06:09:42.477789	2017-06-06 06:09:42.477789
+6	Wholemeal Sour	Kg	2017-06-06 06:10:06.071115	2017-06-06 06:10:06.071115
+7	Seed	Kg	2017-06-06 06:10:20.584295	2017-06-06 06:10:20.584295
+8	Rusty	Kg	2017-06-06 06:10:40.452797	2017-06-06 06:10:40.452797
+2	Brioche	kg	2017-06-05 01:28:43.415195	2017-06-08 10:34:33.226437
+\.
+
+
+--
+-- Name: ingredients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('ingredients_id_seq', 8, true);
+
+
+--
+-- Data for Name: lockdays; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY lockdays (id, day, locked, user_id, created_at, updated_at) FROM stdin;
+1	2017-05-26	t	1	2017-06-02 00:21:18.17059	2017-06-02 00:21:18.17059
+2	2017-05-27	t	1	2017-06-06 05:06:17.878024	2017-06-06 05:06:17.878024
+\.
+
+
+--
+-- Name: lockdays_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('lockdays_id_seq', 2, true);
+
+
+--
+-- Data for Name: orderlogs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY orderlogs (id, product_id, shop_id, day, user_id, created_at, updated_at, quantity, oldquantity) FROM stdin;
+15	33	7	2017-06-08	1	2017-06-08 03:20:37.099847	2017-06-08 03:20:37.099847	12	0
+16	24	7	2017-06-08	1	2017-06-08 03:20:51.835633	2017-06-08 03:20:51.835633	40	0
+17	9	7	2017-06-08	1	2017-06-08 03:20:54.238818	2017-06-08 03:20:54.238818	3	0
+18	16	7	2017-06-08	1	2017-06-08 03:21:12.916508	2017-06-08 03:21:12.916508	1	0
+19	8	2	2017-06-08	1	2017-06-08 03:23:29.516627	2017-06-08 03:23:29.516627	2	0
+20	18	2	2017-06-08	1	2017-06-08 03:23:54.435756	2017-06-08 03:23:54.435756	4	0
+21	12	2	2017-06-08	1	2017-06-08 03:24:22.635834	2017-06-08 03:24:22.635834	2	0
+22	24	2	2017-06-08	1	2017-06-08 03:39:48.714826	2017-06-08 03:39:48.714826	12	0
+23	33	2	2017-06-08	1	2017-06-08 03:40:03.070261	2017-06-08 03:40:03.070261	6	0
+24	28	2	2017-06-08	1	2017-06-08 03:49:15.04461	2017-06-08 03:49:15.04461	2	0
+25	29	2	2017-06-08	1	2017-06-08 03:49:21.212419	2017-06-08 03:49:21.212419	2	0
+26	38	2	2017-06-08	1	2017-06-08 03:50:45.236362	2017-06-08 03:50:45.236362	3	0
+27	39	2	2017-06-08	1	2017-06-08 03:50:55.436137	2017-06-08 03:50:55.436137	3	0
+28	41	2	2017-06-08	1	2017-06-08 03:50:58.24465	2017-06-08 03:50:58.24465	4	0
+29	23	3	2017-06-08	1	2017-06-08 03:51:44.504323	2017-06-08 03:51:44.504323	20	0
+30	24	3	2017-06-08	1	2017-06-08 03:52:17.436217	2017-06-08 03:52:17.436217	40	0
+31	34	3	2017-06-08	1	2017-06-08 03:54:41.776977	2017-06-08 03:54:41.776977	3	0
+32	42	3	2017-06-08	1	2017-06-08 03:56:36.12073	2017-06-08 03:56:36.12073	20	0
+33	32	4	2017-06-08	1	2017-06-08 04:06:38.252201	2017-06-08 04:06:38.252201	2	0
+34	35	4	2017-06-08	1	2017-06-08 04:06:44.442061	2017-06-08 04:06:44.442061	2	0
+35	44	4	2017-06-08	1	2017-06-08 04:06:51.411568	2017-06-08 04:06:51.411568	2	0
+36	43	4	2017-06-08	1	2017-06-08 04:07:09.435715	2017-06-08 04:07:09.435715	2	0
+37	24	4	2017-06-08	1	2017-06-08 04:07:22.043912	2017-06-08 04:07:22.043912	20	0
+38	23	5	2017-06-08	1	2017-06-08 04:08:26.093313	2017-06-08 04:08:26.093313	4	0
+39	8	5	2017-06-08	1	2017-06-08 04:08:41.440331	2017-06-08 04:08:41.440331	5	0
+40	45	5	2017-06-08	1	2017-06-08 04:10:30.90181	2017-06-08 04:10:30.90181	8	0
+41	35	5	2017-06-08	1	2017-06-08 04:10:51.639414	2017-06-08 04:10:51.639414	3	0
+42	46	5	2017-06-08	1	2017-06-08 04:13:00.664163	2017-06-08 04:13:00.664163	3	0
+43	47	5	2017-06-08	1	2017-06-08 04:15:12.242936	2017-06-08 04:15:12.242936	3	0
+44	8	6	2017-06-08	1	2017-06-08 07:14:15.116907	2017-06-08 07:14:15.116907	3	0
+45	9	6	2017-06-08	1	2017-06-08 07:14:24.298108	2017-06-08 07:14:24.298108	4	0
+46	48	6	2017-06-08	1	2017-06-08 07:17:03.243841	2017-06-08 07:17:03.243841	2	0
+47	25	6	2017-06-08	1	2017-06-08 07:17:32.435842	2017-06-08 07:17:32.435842	20	0
+48	33	6	2017-06-08	1	2017-06-08 07:17:46.674112	2017-06-08 07:17:46.674112	7	0
+49	46	6	2017-06-08	1	2017-06-08 07:18:06.237565	2017-06-08 07:18:06.237565	7	0
+50	34	6	2017-06-08	1	2017-06-08 07:18:23.216333	2017-06-08 07:18:23.216333	7	0
+51	49	6	2017-06-08	1	2017-06-08 07:18:42.931308	2017-06-08 07:18:42.931308	6	0
+52	45	6	2017-06-08	1	2017-06-08 10:36:16.932488	2017-06-08 10:36:16.932488	1	0
+53	45	6	2017-06-08	1	2017-06-08 10:36:24.448737	2017-06-08 10:36:24.448737	0	1
+\.
+
+
+--
+-- Name: orderlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('orderlogs_id_seq', 53, true);
+
+
+--
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY orders (id, product_id, shop_id, day, quantity, locked, user_id, created_at, updated_at) FROM stdin;
+124	33	7	2017-06-08	12	f	1	2017-06-08 03:20:37.072606	2017-06-08 03:20:37.072606
+125	24	7	2017-06-08	40	f	1	2017-06-08 03:20:51.763085	2017-06-08 03:20:51.763085
+126	9	7	2017-06-08	3	f	1	2017-06-08 03:20:54.074321	2017-06-08 03:20:54.074321
+127	16	7	2017-06-08	1	f	1	2017-06-08 03:21:12.867857	2017-06-08 03:21:12.867857
+128	8	2	2017-06-08	2	f	1	2017-06-08 03:23:29.506188	2017-06-08 03:23:29.506188
+129	18	2	2017-06-08	4	f	1	2017-06-08 03:23:54.276051	2017-06-08 03:23:54.276051
+130	12	2	2017-06-08	2	f	1	2017-06-08 03:24:22.455658	2017-06-08 03:24:22.455658
+131	24	2	2017-06-08	12	f	1	2017-06-08 03:39:48.707504	2017-06-08 03:39:48.707504
+132	33	2	2017-06-08	6	f	1	2017-06-08 03:40:03.061586	2017-06-08 03:40:03.061586
+133	28	2	2017-06-08	2	f	1	2017-06-08 03:49:15.036533	2017-06-08 03:49:15.036533
+134	29	2	2017-06-08	2	f	1	2017-06-08 03:49:21.206449	2017-06-08 03:49:21.206449
+135	38	2	2017-06-08	3	f	1	2017-06-08 03:50:45.062845	2017-06-08 03:50:45.062845
+136	39	2	2017-06-08	3	f	1	2017-06-08 03:50:55.347673	2017-06-08 03:50:55.347673
+137	41	2	2017-06-08	4	f	1	2017-06-08 03:50:58.236344	2017-06-08 03:50:58.236344
+138	23	3	2017-06-08	20	f	1	2017-06-08 03:51:44.494526	2017-06-08 03:51:44.494526
+139	24	3	2017-06-08	40	f	1	2017-06-08 03:52:17.302855	2017-06-08 03:52:17.302855
+140	34	3	2017-06-08	3	f	1	2017-06-08 03:54:41.770318	2017-06-08 03:54:41.770318
+141	42	3	2017-06-08	20	f	1	2017-06-08 03:56:36.112167	2017-06-08 03:56:36.112167
+142	32	4	2017-06-08	2	f	1	2017-06-08 04:06:38.241628	2017-06-08 04:06:38.241628
+143	35	4	2017-06-08	2	f	1	2017-06-08 04:06:44.388387	2017-06-08 04:06:44.388387
+144	44	4	2017-06-08	2	f	1	2017-06-08 04:06:51.405841	2017-06-08 04:06:51.405841
+145	43	4	2017-06-08	2	f	1	2017-06-08 04:07:09.312987	2017-06-08 04:07:09.312987
+146	24	4	2017-06-08	20	f	1	2017-06-08 04:07:22.036776	2017-06-08 04:07:22.036776
+147	23	5	2017-06-08	4	f	1	2017-06-08 04:08:26.084721	2017-06-08 04:08:26.084721
+148	8	5	2017-06-08	5	f	1	2017-06-08 04:08:41.343783	2017-06-08 04:08:41.343783
+149	45	5	2017-06-08	8	f	1	2017-06-08 04:10:30.884878	2017-06-08 04:10:30.884878
+150	35	5	2017-06-08	3	f	1	2017-06-08 04:10:51.500646	2017-06-08 04:10:51.500646
+151	46	5	2017-06-08	3	f	1	2017-06-08 04:13:00.651798	2017-06-08 04:13:00.651798
+152	47	5	2017-06-08	3	f	1	2017-06-08 04:15:12.077989	2017-06-08 04:15:12.077989
+153	8	6	2017-06-08	3	f	1	2017-06-08 07:14:15.107104	2017-06-08 07:14:15.107104
+154	9	6	2017-06-08	4	f	1	2017-06-08 07:14:24.292427	2017-06-08 07:14:24.292427
+155	48	6	2017-06-08	2	f	1	2017-06-08 07:17:03.160328	2017-06-08 07:17:03.160328
+156	25	6	2017-06-08	20	f	1	2017-06-08 07:17:32.282352	2017-06-08 07:17:32.282352
+157	33	6	2017-06-08	7	f	1	2017-06-08 07:17:46.667208	2017-06-08 07:17:46.667208
+158	46	6	2017-06-08	7	f	1	2017-06-08 07:18:06.184938	2017-06-08 07:18:06.184938
+159	34	6	2017-06-08	7	f	1	2017-06-08 07:18:23.205843	2017-06-08 07:18:23.205843
+160	49	6	2017-06-08	6	f	1	2017-06-08 07:18:42.922919	2017-06-08 07:18:42.922919
+\.
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('orders_id_seq', 161, true);
+
+
+--
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY products (id, title, description, leadtime, price, created_at, updated_at) FROM stdin;
+9	Rye Sour	Rye Sour	0	1.00	2017-06-07 11:02:53.624811	2017-06-07 11:02:53.624811
+10	Meal Sour	Meal Sour	0	1.00	2017-06-07 11:03:16.641492	2017-06-07 11:03:16.641492
+11	Seed Sour	Seed Sour	0	1.00	2017-06-07 11:03:42.469601	2017-06-07 11:03:42.469601
+13	Seeded Cob	Seeded Cob	0	1.00	2017-06-07 11:04:37.89812	2017-06-07 11:04:37.89812
+14	Seed High	Seed High	0	1.00	2017-06-07 11:05:10.208845	2017-06-07 11:05:10.208845
+15	Seed Rolls	Seed Rolls	0	1.00	2017-06-07 11:05:38.209154	2017-06-07 11:05:38.209154
+16	White High	White High	0	1.00	2017-06-07 11:06:03.130593	2017-06-07 11:06:03.130593
+17	Rusty Rye	Rusty Rye	0	1.00	2017-06-07 11:06:28.08565	2017-06-07 11:06:28.08565
+18	Baguette	Baguette	0	1.00	2017-06-07 11:06:54.634942	2017-06-07 11:06:54.634942
+19	Foccacia Lrg	Foccacia Lrg	0	1.00	2017-06-07 11:07:21.527782	2017-06-07 11:07:21.527782
+20	Foccacia Sml	Foccacia Sml	0	1.00	2017-06-07 11:07:52.486088	2017-06-07 11:07:52.486088
+21	White Rolls 	White Rolls 	0	1.00	2017-06-07 11:08:22.077504	2017-06-07 11:08:22.077504
+22	Torpedos	Torpedos	0	1.00	2017-06-07 11:08:55.89658	2017-06-07 11:08:55.89658
+23	Ciabatta	Ciabatta	0	1.00	2017-06-07 11:09:27.511331	2017-06-07 11:09:27.511331
+26	Brioche HD	Brioche HD	0	1.00	2017-06-07 11:11:28.803647	2017-06-07 11:11:28.803647
+27	Brioche slider	Brioche slider	0	1.00	2017-06-07 11:11:54.974549	2017-06-07 11:11:54.974549
+30	Fruit Pastry	Fruit Pastry	0	1.00	2017-06-07 11:14:41.898627	2017-06-07 11:14:41.898627
+31	Savory	Savory	0	1.00	2017-06-07 11:15:20.053677	2017-06-07 11:15:20.053677
+32	Bear Claw	Bear Claw	0	1.00	2017-06-07 11:15:45.903751	2017-06-07 11:15:45.903751
+33	Croissant	Croissant	0	1.00	2017-06-07 11:16:11.75134	2017-06-07 11:16:11.75134
+8	White Sourdough	White Sour	0	1.00	2017-06-07 11:00:08.428881	2017-06-08 03:27:26.210523
+12	Fruit Sourdough	Fruit	0	1.00	2017-06-07 11:04:06.952752	2017-06-08 03:30:04.307418
+25	Brioche (125g)	Brioche Small	0	1.00	2017-06-07 11:11:00.282224	2017-06-08 03:38:19.984892
+28	Danish Blueberry	Blueberry	0	1.00	2017-06-07 11:12:38.905977	2017-06-08 03:41:32.032705
+29	Danish Raspberry	Raspberry	0	1.00	2017-06-07 11:13:46.456457	2017-06-08 03:42:05.292943
+36	Tarts	Tarts	0	1.00	2017-06-08 03:44:13.85014	2017-06-08 03:44:13.85014
+37	Fruit Tart	Fruit Tart	0	1.00	2017-06-08 03:44:56.446251	2017-06-08 03:44:56.446251
+38	Francipane Blueberry	Francipane Blueberry	0	1.00	2017-06-08 03:45:46.270951	2017-06-08 03:45:46.270951
+39	Francipane Raspberry	Francipane Raspberry	0	1.00	2017-06-08 03:46:18.946831	2017-06-08 03:46:18.946831
+40	Scones	Scones	0	1.00	2017-06-08 03:46:50.029417	2017-06-08 03:46:50.029417
+41	Cake - Carrot	Cake - Carrot	0	1.00	2017-06-08 03:47:21.676492	2017-06-08 03:47:21.676492
+35	Croissant - Almond	Almond Croissant	0	1.00	2017-06-08 03:43:46.437995	2017-06-08 03:48:02.646392
+34	Croissant - Chocolate	Choc Croissant	0	1.00	2017-06-07 11:16:52.61555	2017-06-08 03:50:10.119809
+24	Brioche Rolls (150g with seeds)	Brioche (150g)	0	1.00	2017-06-07 11:09:57.268008	2017-06-08 03:53:56.693182
+42	Tart shells	Tart Shells	0	1.00	2017-06-08 03:55:56.905199	2017-06-08 03:55:56.905199
+44	Cinnamon Scroll	Cinnamon Scroll	0	1.00	2017-06-08 04:03:35.845394	2017-06-08 04:03:35.845394
+43	Raspberry Slice	Raspberry Slice	0	1.00	2017-06-08 04:02:43.14237	2017-06-08 04:06:02.449512
+45	Bagels	Bagels	0	1.00	2017-06-08 04:09:42.183863	2017-06-08 04:09:42.183863
+46	Danish Assorted	Danish - assorted	0	1.00	2017-06-08 04:11:58.504746	2017-06-08 04:12:25.4323
+47	Scroll	Scroll	0	1.00	2017-06-08 04:13:45.066251	2017-06-08 04:13:45.066251
+48	Fruit Loaf	Fruit Loaf	0	1.00	2017-06-08 07:15:26.664057	2017-06-08 07:15:26.664057
+49	Danish Savoury		0	1.00	2017-06-08 07:16:26.242008	2017-06-08 07:16:26.242008
+\.
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('products_id_seq', 49, true);
+
+
+--
+-- Data for Name: recipes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY recipes (id, product_id, ingredient_id, created_at, updated_at, amount) FROM stdin;
+8	8	4	2017-06-07 11:40:18.861421	2017-06-07 11:40:18.861421	0.9000
+9	9	5	2017-06-07 11:46:21.018655	2017-06-07 11:46:21.018655	0.9000
+10	10	6	2017-06-07 11:46:45.237198	2017-06-07 11:46:45.237198	0.9000
+11	11	6	2017-06-07 11:47:11.472959	2017-06-07 11:47:11.472959	0.9000
+12	12	6	2017-06-07 11:47:34.031227	2017-06-07 11:47:34.031227	0.8500
+13	13	7	2017-06-07 11:48:14.752814	2017-06-07 11:48:14.752814	0.8000
+14	14	7	2017-06-07 11:48:35.934068	2017-06-07 11:48:35.934068	1.2000
+15	15	7	2017-06-07 11:49:06.555234	2017-06-07 11:49:06.555234	0.1500
+16	16	8	2017-06-07 11:49:52.20798	2017-06-07 11:49:52.20798	1.2000
+17	17	8	2017-06-07 11:50:13.507294	2017-06-07 11:50:13.507294	0.9000
+18	18	3	2017-06-07 11:50:34.901672	2017-06-07 11:50:34.901672	0.4500
+19	19	3	2017-06-07 11:50:59.856215	2017-06-07 11:50:59.856215	0.5000
+20	20	3	2017-06-07 11:51:25.079172	2017-06-07 11:51:25.079172	0.1500
+21	21	3	2017-06-07 11:51:50.141283	2017-06-07 11:51:50.141283	0.1500
+22	22	3	2017-06-07 11:52:14.321745	2017-06-07 11:52:14.321745	0.1500
+23	23	3	2017-06-07 11:52:33.212674	2017-06-07 11:52:33.212674	0.1800
+24	24	2	2017-06-07 11:53:00.781561	2017-06-07 11:53:00.781561	0.1500
+26	26	2	2017-06-07 11:54:04.037671	2017-06-07 11:54:04.037671	0.1500
+27	27	2	2017-06-07 11:54:30.854095	2017-06-07 11:54:30.854095	0.0300
+25	25	2	2017-06-07 11:53:18.889042	2017-06-07 12:08:19.403912	0.1250
+\.
+
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('recipes_id_seq', 27, true);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY schema_migrations (version) FROM stdin;
+20170515111304
+20170525040128
+20170525061609
+20170526055854
+20170601064303
+20170602000840
+20170605010456
+20170605011348
+20170605020823
+20170606040407
+20170606073950
+20170607113201
+20170607113234
+20170607120103
+\.
+
+
+--
+-- Data for Name: shops; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY shops (id, name, address, suburb, postcode, contact, phone, email, note, created_at, updated_at) FROM stdin;
+1	Knead Patisserie	Shop 18 and 41,\r\nBelconnen Fresh Food Marketts,\r\nLachlain Street,\r\nBelconnen ACT 2617,\r\nABN: ,\r\nOrders: 0422 156 633	x	x	x	1	x		2017-05-25 04:04:31.310697	2017-06-08 02:56:06.90746
+2	1 or 2 Cafe	x	x	x	x	1	x		2017-05-26 07:18:49.168836	2017-06-08 02:57:28.767949
+3	Pick Up Stix	x	x	x	x	1	x		2017-05-31 03:54:45.608771	2017-06-08 02:58:17.526394
+4	Elemental	x	x	x	x	1	x		2017-06-08 02:59:10.358749	2017-06-08 02:59:10.358749
+5	Little Oink	x	x	x	x	1	x		2017-06-08 02:59:58.165026	2017-06-08 02:59:58.165026
+6	Redbrick Expresso	x	x	x	x	1	x		2017-06-08 03:00:34.580124	2017-06-08 03:00:34.580124
+7	Knocks	x	x	x	x	1	x		2017-06-08 03:01:22.258636	2017-06-08 03:01:22.258636
+\.
+
+
+--
+-- Name: shops_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('shops_id_seq', 7, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY users (id, name, email, password_digest, role, day, shop, created_at, updated_at) FROM stdin;
+2	Dan	danmcauliffe@outlook.com	$2a$10$6.skTIYDYHjEQ/wQjuPoLOsjJAfSV2Irlz.bsf/kPbGhZqpdHQjZ6	user	2017-05-26	Belconnen Bakery	2017-05-25 06:28:39.415435	2017-05-25 06:28:39.415435
+3	James	james@whatever	$2a$10$1faqqECEFldtUfTolZiQxOkaU3e3oN0hxgERzUWG7UjGjRvhyxr72	standard	2017-06-07	Woden Bakery	2017-06-07 09:13:16.868284	2017-06-07 09:13:16.868284
+1	Mike	mike@mikebarb.net	$2a$10$bSLy6N6Gb2nARdEgUDfwxeuselbdlcM.Ez3es/fJTVzT46gVOul2m	user	2017-06-08	1 or 2 Cafe	2017-05-25 06:27:19.741916	2017-06-08 10:36:45.761976
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_id_seq', 3, true);
+
+
+--
+-- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: ingredients_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ingredients
+    ADD CONSTRAINT ingredients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lockdays_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY lockdays
+    ADD CONSTRAINT lockdays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orderlogs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY orderlogs
+    ADD CONSTRAINT orderlogs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY recipes
+    ADD CONSTRAINT recipes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: shops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY shops
+    ADD CONSTRAINT shops_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_ingredients_on_item; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_ingredients_on_item ON ingredients USING btree (item);
+
+
+--
+-- Name: index_lockdays_on_day; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_lockdays_on_day ON lockdays USING btree (day);
+
+
+--
+-- Name: index_lockdays_on_user_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_lockdays_on_user_id ON lockdays USING btree (user_id);
+
+
+--
+-- Name: index_orderlogs_on_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orderlogs_on_product_id ON orderlogs USING btree (product_id);
+
+
+--
+-- Name: index_orderlogs_on_shop_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orderlogs_on_shop_id ON orderlogs USING btree (shop_id);
+
+
+--
+-- Name: index_orderlogs_on_user_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orderlogs_on_user_id ON orderlogs USING btree (user_id);
+
+
+--
+-- Name: index_orders_on_day; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_day ON orders USING btree (day);
+
+
+--
+-- Name: index_orders_on_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_product_id ON orders USING btree (product_id);
+
+
+--
+-- Name: index_orders_on_product_id_and_shop_id_and_day; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_orders_on_product_id_and_shop_id_and_day ON orders USING btree (product_id, shop_id, day);
+
+
+--
+-- Name: index_orders_on_shop_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_shop_id ON orders USING btree (shop_id);
+
+
+--
+-- Name: index_orders_on_user_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_orders_on_user_id ON orders USING btree (user_id);
+
+
+--
+-- Name: index_recipes_on_ingredient_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_recipes_on_ingredient_id ON recipes USING btree (ingredient_id);
+
+
+--
+-- Name: index_recipes_on_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX index_recipes_on_product_id ON recipes USING btree (product_id);
+
+
+--
+-- Name: index_recipes_on_product_id_and_ingredient_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_recipes_on_product_id_and_ingredient_id ON recipes USING btree (product_id, ingredient_id);
+
+
+--
+-- Name: fk_rails_79c67fe75c; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orderlogs
+    ADD CONSTRAINT fk_rails_79c67fe75c FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: fk_rails_7be25a77b7; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orderlogs
+    ADD CONSTRAINT fk_rails_7be25a77b7 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_rails_7e761c2e1b; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT fk_rails_7e761c2e1b FOREIGN KEY (shop_id) REFERENCES shops(id);
+
+
+--
+-- Name: fk_rails_abf3bd4858; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY recipes
+    ADD CONSTRAINT fk_rails_abf3bd4858 FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: fk_rails_aeb611668c; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY recipes
+    ADD CONSTRAINT fk_rails_aeb611668c FOREIGN KEY (ingredient_id) REFERENCES ingredients(id);
+
+
+--
+-- Name: fk_rails_d55e8eb912; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orderlogs
+    ADD CONSTRAINT fk_rails_d55e8eb912 FOREIGN KEY (shop_id) REFERENCES shops(id);
+
+
+--
+-- Name: fk_rails_dfb33b2de0; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT fk_rails_dfb33b2de0 FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: fk_rails_e1f93d0f91; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY lockdays
+    ADD CONSTRAINT fk_rails_e1f93d0f91 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_rails_f868b47f6a; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT fk_rails_f868b47f6a FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

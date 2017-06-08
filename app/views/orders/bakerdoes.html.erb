@@ -24,35 +24,11 @@
   </tbody>
 </table>
 
-
-<p>This table is for diagnostics.</p>
-<table>
-  <thead>
-    <tr>
-      <th>Product</th>
-      <th>Quantity</th>
-      <th>Ingredient</th>
-      <th>Recipie Amount</th>
-      
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @bakerdoes2.each do |bakerdoe2| %>
-      <tr>
-        <td><%= bakerdoe2.title %></td>
-        <td><%= bakerdoe2.totalqty %></td>
-        <td><%= bakerdoe2.item %></td>
-        <td><%= bakerdoe2.amount %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
 <br>
 <%= link_to 'Show delivery page', ordersdelivery_path %>
 <%= link_to 'Show bakers page', ordersbakers_path %>
 <%= link_to 'Show product shop summary page', ordersproductshops_path %>
 <%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
+<%= link_to 'Show ingredients', ingredients_path %>
+<%= link_to 'Show recipes', recipes_path %>
 

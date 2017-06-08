@@ -24,31 +24,10 @@
   </tbody>
 </table>
 
-<p> This table for diagnositics only</p>
-<table>
-    <thead>
-    <tr>
-      <th>id</th>
-      <th>Product_id</th>
-      <th>Shop_id</th>
-      <th>quantity</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @baker1.each do |baker1| %>
-      <tr>
-        <td><%= baker1.id %></td>
-        <td><%= baker1.product_id %></td>
-        <td><%= baker1.shop_id %></td>
-        <td><%= baker1.quantity %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
 <br>
 <%= link_to 'Show delivery page', ordersdelivery_path %>
 <%= link_to 'Show baker doe page', ordersbakerdoes_path %>
 <%= link_to 'Show product shop summary page', ordersproductshops_path %>
 <%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
-
+<%= link_to 'Show ingredients', ingredients_path %>
+<%= link_to 'Show recipes', recipes_path %>

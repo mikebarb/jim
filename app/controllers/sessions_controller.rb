@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
       session[:user_shop] = user.shop
       session[:user_shop_id] = shop.id
       session[:user_day] = user.day
-      redirect_to orders_url
+      redirect_to ordersedit_url
     else
       redirect_to login_url, alert: "Invalid user/password combination"
     end
@@ -24,6 +24,5 @@ class SessionsController < ApplicationController
     session[:user_shop_id] = nil
     session[:user_day] = nil
     redirect_to login_url, notice: "Logged out"
-    #redirect_to products_url, notice: "Logged out"
   end
 end

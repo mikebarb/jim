@@ -3,9 +3,20 @@ class RecipesController < ApplicationController
 
   # GET /recipes
   # GET /recipes.json
+  #def index1
+  #  @recipes = Recipe.all
+  #end
+
   def index
-    @recipes = Recipe.all
+    @recipes = Recipe.find_by_sql [ "
+      SELECT r.id, r.product_id AS product_id, r.ingredient_id AS ingredient_id, p.title,  r.amount, i.item, i.unit
+      FROM recipes AS r
+      FULL OUTER JOIN products AS p ON p.id = r.product_id
+      FULL OUTER JOIN ingredients AS i ON i.id = r.ingredient_id
+      ORDER BY p.title
+    " ]   
   end
+  logger.debug "@recipes" + @recipes.inspect
 
   # GET /recipes/1
   # GET /recipes/1.json
@@ -33,7 +44,7 @@ class RecipesController < ApplicationController
 
     respond_to do |format|
       if @recipe.save
-        format.html { redirect_to @recipe, notice: 'Recipe was successfully created.' }
+        format.html { redirect_to recipes_path }
         format.json { render :show, status: :created, location: @recipe }
       else
         format.html { render :new }
