@@ -204,7 +204,7 @@ class OrdersController < ApplicationController
     # We now process the normal display for ordering information.
     # Above this was simply detecting if this order was empty and what action to take.
     @products = Product.find_by_sql [ "
-      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id, s.name as sector_name
+      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id, s.name as sector_name, o.cost
       FROM products AS p
       LEFT OUTER JOIN orders AS o ON p.id = o.product_id AND o.day = ? AND o.shop_id = ?
       INNER JOIN sectors AS s ON p.sector_id = s.id 

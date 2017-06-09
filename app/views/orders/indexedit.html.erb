@@ -39,6 +39,8 @@
     <tr class="product" id="<%= product.product_id %>">
       <td class="product_id"><%= product.product_id %></td>
       <td class="title"><%= product.title %></td>
+      <td><%= product.price %></td>
+      <td><%= product.cost %></td>
       <% if @locked == 0 %>
         <td> 
           <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
