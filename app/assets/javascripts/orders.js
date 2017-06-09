@@ -9,6 +9,17 @@
 $(document).ready(function() {
     console.log("document ready");
 
+    $(".sector").click(function(){
+        console.log("sector clicked");
+        var mytable = $(this).next();
+        console.log (this);
+        console.log (mytable);
+        $(mytable).toggleClass("hideme showme");
+        console.log (this);
+        
+    });
+
+
     $(".noclonebutton").click(function(){
         console.log("noclonebutton clicked");
         $(this).parents(".checkordersempty").empty();

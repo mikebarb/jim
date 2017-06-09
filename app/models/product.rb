@@ -7,4 +7,5 @@ class Product < ApplicationRecord
     has_many :shops, through: :orders
     has_many :recipes
     has_many :ingredients, through: :recipes
+    belongs_to :sector
 end

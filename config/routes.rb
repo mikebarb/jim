@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :sectors
   get 'orderlogdayshop', to: 'orderlogs#indexdayshop'
   resources :orderlogs
   resources :recipes

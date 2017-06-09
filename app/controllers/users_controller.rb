@@ -15,26 +15,20 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
-    @shop_options = Shop.all.map{ |u| [u.name] }
+    @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
   end
 
   # GET /users/1/edit
   def edit
-    @shop_options = Shop.all.map{ |u| [u.name] }
+    @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
   end
 
   # GET /users/1/editdayshop
   def editdayshop
-    logger.debug "in the user controller -> editdayshop"
-    logger.debug "session user_id: " + session[:user_id].inspect
     unless session[:user_id].nil?  # check that we are logged in
       @user = User.where(id: session[:user_id])
-      @shop_options = Shop.all.map{ |u| [u.name] }
-      logger.debug "in the user controller -> editdayshop and logged in"
-      logger.debug "user: " + @user.inspect
-      logger.debug "shop_options: " + @shop_options.inspect
+      @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
     else
-      logger.debug "in the user controller -> editdayshop and NOT logged in"
       redirect_to users_url, notice: 'User is not logged in!!!'
     end
   end

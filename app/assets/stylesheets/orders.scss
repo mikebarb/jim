@@ -55,8 +55,12 @@
   //border:1px solid black;
 }
 .hideme {
+  display: none;  // use inline or none
+}
+.showme {
   display: inline;  // use inline or none
-}td {
+}
+td {
   vertical-align: top;
 }
 table {

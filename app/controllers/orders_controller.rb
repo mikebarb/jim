@@ -4,8 +4,6 @@ class OrdersController < ApplicationController
 
   # GET /productshop
   def productshop
-    #logger.debug "in productshop"
-
     @prodshop = Order.find_by_sql ["
       SELECT o.id, p.title, s.name, o.quantity, p.price
       FROM orders AS o
@@ -203,13 +201,14 @@ class OrdersController < ApplicationController
     #logger.debug "@noorders: " + @noorders.inspect
     #logger.debug "@copymessage: " + @copymessage.inspect
 
+    # We now process the normal display for ordering information.
+    # Above this was simply detecting if this order was empty and what action to take.
     @products = Product.find_by_sql [ "
-      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id
+      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id, s.name as sector_name
       FROM products AS p
-      LEFT OUTER JOIN orders AS o 
-      ON p.id = o.product_id
-      AND o.day = ? AND o.shop_id = ?
-      ORDER BY p.title
+      LEFT OUTER JOIN orders AS o ON p.id = o.product_id AND o.day = ? AND o.shop_id = ?
+      INNER JOIN sectors AS s ON p.sector_id = s.id 
+      ORDER BY s.name, p.title
     ", @current_day, @current_shop_id ]
 
     @lockday = Lockday

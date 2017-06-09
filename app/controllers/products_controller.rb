@@ -6,6 +6,11 @@ class ProductsController < ApplicationController
   def index
     @products = Product.all
                 .order("title")
+    logger.debug "@products: " + @products.inspect
+    @myproduct = Product.find(45)
+    logger.debug "@myproduct: " + @myproduct.inspect
+    @cat = @myproduct.title
+    logger.debug "@cat: " + @cat.inspect
   end
 
   # GET /products/1
@@ -16,10 +21,14 @@ class ProductsController < ApplicationController
   # GET /products/new
   def new
     @product = Product.new
+    @sector_options = Sector.all.map{ |u| [u.name, u.id] }
   end
 
   # GET /products/1/edit
   def edit
+    logger.debug "products controller - @product: " + @product.inspect
+    @sector_options = Sector.all.map{ |u| [u.name, u.id] }
+    logger.debug "products controller - @sector_options: " + @sector_options.inspect
   end
 
   # POST /products
@@ -43,7 +52,7 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to @product, notice: 'Product was successfully updated.' }
+        format.html { redirect_to products_path, notice: 'Product was successfully updated.' }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit }
@@ -70,6 +79,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:title, :description, :leadtime, :price)
+      params.require(:product).permit(:title, :description, :leadtime, :price, :sector_id, :sector)
     end
 end

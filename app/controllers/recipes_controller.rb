@@ -26,8 +26,8 @@ class RecipesController < ApplicationController
   # GET /recipes/new
   def new
     @recipe = Recipe.new
-    @product_options = Product.all.map{ |u| [u.title, u.id] }
-    @ingredient_options = Ingredient.all.map{ |u| [u.item, u.id] }
+    @product_options = Product.all.order(:title).map{ |u| [u.title, u.id] }
+    @ingredient_options = Ingredient.all.order(:item).map{ |u| [u.item, u.id] }
     
   end
 

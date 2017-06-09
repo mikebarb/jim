@@ -26,19 +26,13 @@
   </div>
 <% end %>
 
-  <% cat = "" %>
+<table>
   <% @products.each do |product| %>
-    <% if product.sector_name != cat %>
-      <% unless cat.blank? %>
-        </table>
-      <% end %>
-      <% cat = product.sector_name %>
-      <div class="sector"><b><%= cat %></b></div>
-      <table class="product_group, showme">
-    <% end %>
     <tr class="product" id="<%= product.product_id %>">
+      <td class="product_sector_name"><%= product.sector_name %></td>
       <td class="product_id"><%= product.product_id %></td>
       <td class="title"><%= product.title %></td>
+      <td class="price"><%= number_to_currency(product.price) %></td>
       <% if @locked == 0 %>
         <td> 
           <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
@@ -50,9 +44,7 @@
       <td class="order_id"><%= product.order_id %></td>
     </tr>
   <% end %>
-  <% unless cat.blank? %>
-    </table>
-  <% end %>
+</table>
 
 <br>
 

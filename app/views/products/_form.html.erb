@@ -17,6 +17,11 @@
   </div>
 
   <div class="field">
+    <%= f.label :sector_id %>
+    <%= f.select :sector_id, @sector_options %>
+  </div>
+
+  <div class="field">
     <%= f.label :description %>
     <%= f.text_area :description, rows: 10, cols: 60 %>
   </div>
