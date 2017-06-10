@@ -58,13 +58,14 @@
   display: none;  // use inline or none
 }
 .showme {
-  display: inline;  // use inline or none
+  //display: inline;  // use inline or none
 }
 td {
   vertical-align: top;
 }
 table {
-  width: 100%; 
+  width: 40%;
+  table-layout: fixed;
 }
 table, th, td {
   border: 1px solid black;
