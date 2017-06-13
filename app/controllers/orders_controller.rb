@@ -218,7 +218,7 @@ class OrdersController < ApplicationController
 
     #logger.debug "lockday:" + @lockday.inspect
     #logger.debug "locked:" +  @locked.inspect
-    logger.debug "products:" + @products.inspect
+    #logger.debug "products:" + @products.inspect
   end
 
   # GET /orders
