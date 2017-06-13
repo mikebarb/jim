@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   get 'userdayshop', to: 'users#editdayshop'
   resources :users
   resources :shops
+  get 'displayproducts', to: 'products#display'
   resources :products
   
   root 'orders#indexedit'

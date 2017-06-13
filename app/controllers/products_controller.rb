@@ -1,16 +1,27 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
+  # GET /displayproducts
+  def display
+    #@products = Product.includes(:sector).all
+    #            .order("sectors.name, title")
+                
+    @products = Product.find_by_sql [ "
+      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, p.inactive, s.name as sector_name
+      FROM products AS p
+      INNER JOIN sectors AS s ON p.sector_id = s.id and p.inactive = FALSE
+      ORDER BY s.name, p.title
+    "]
+    logger.debug "@products: " + @products.inspect
+  end
+
   # GET /products
   # GET /products.json
   def index
-    @products = Product.all
-                .order("title")
-    logger.debug "@products: " + @products.inspect
-    @myproduct = Product.find(45)
-    logger.debug "@myproduct: " + @myproduct.inspect
-    @cat = @myproduct.title
-    logger.debug "@cat: " + @cat.inspect
+    #@products = Product.all
+    #            .order("title")
+    @products = Product.includes(:sector).all
+                .order("sectors.name, title")
   end
 
   # GET /products/1
@@ -79,6 +90,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:title, :description, :leadtime, :price, :sector_id, :sector)
+      params.require(:product).permit(:title, :description, :leadtime, :price, :sector_id, :sector, :inactive)
     end
 end

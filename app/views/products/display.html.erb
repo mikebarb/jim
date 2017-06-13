@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Products</h1>
+
+  <% cat = "" %>
+  <% @products.each do |product| %>
+    <% if product.sector_name != cat %>
+      <% unless cat.blank? %>
+        </table>
+      <% end %>
+      <% cat = product.sector_name %>
+      <div class="sector"><b><%= cat %></b></div>
+      <table class="product_group, showme">
+    <% end %>      
+    <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+      <td class="list_description">
+        <dl>
+          <dt><%= product.title %></dt>
+          <dd><%= truncate(strip_tags(product.description), length: 80) %></dd>
+        </dl>
+      </td>
+      <td><%= product.leadtime %></td>
+      <td class="price"><%= number_to_currency(product.price) %></td>
+    </tr>
+  <% end %>
+  <% unless cat.blank? %>
+    </table>
+  <% end %>
+
+<br />
+
+<%= link_to 'Place Orders', ordersedit_path %>

@@ -13,6 +13,13 @@
       </td>
       <td><%= product.sector.name %></td>
       <td><%= product.leadtime %></td>
+      <td>
+      <% if product.inactive %>
+        Inactive
+      <% else %>
+        Active
+      <% end %>
+      </td>
       <td class="price"><%= number_to_currency(product.price) %></td>
         
       <td class="list_actions">
@@ -26,3 +33,4 @@
 <br />
 
 <%= link_to 'New Product', new_product_path %>
+<%= link_to 'Customer View of Products', displayproducts_path %>
