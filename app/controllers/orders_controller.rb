@@ -200,7 +200,7 @@ class OrdersController < ApplicationController
     end
     #logger.debug "@noorders: " + @noorders.inspect
     #logger.debug "@copymessage: " + @copymessage.inspect
-
+    
     # We now process the normal display for ordering information.
     # Above this was simply detecting if this order was empty and what action to take.
     @products = Product.find_by_sql [ "
@@ -211,10 +211,39 @@ class OrdersController < ApplicationController
       WHERE p.inactive = false
       ORDER BY s.name, p.title
     ", @current_day, @current_shop_id ]
+     logger.debug "@products: " + @myproducts.inspect
 
+    # check if this day has been locked by the baker
+    # shown by the delivery day being added to the locked table
     @lockday = Lockday
              .where("day = ?", @current_day)
     @locked = @lockday.count
+    logger.debug "@locked: " + @locked.inspect
+
+    # If it is not locked by the baker, then need to check if product items should not be updated 
+    # Need to now do swom work to see if any order for today should be locked
+    # Need to reference midnight - start of delivery day being processed.
+    timedeliveryday = @current_day.to_time                  # epoch time of the currnt day at midnight
+    logger.debug "timedeliveryday: " + timedeliveryday.inspect
+    timenow = Time.now                                      # epoch time of this  instant
+    logger.debug "timenow: " + timenow.inspect
+    hoursdifference = (timedeliveryday - timenow)/3600      # how many hour till this order is due for delivery
+    logger.debug "hoursdifference: " + hoursdifference.inspect
+
+    if @locked == 0                                           # if delivery day is locked, no finer checking required 
+      @products.each do |p|                                 # check if individual products need to be locked
+        logger.debug "@products (p)-before: " + p.inspect
+        if(hoursdifference < p.leadtime)                             # order is OK to update
+          logger.debug "hoursdifference: " + hoursdifference.inspect
+          logger.debug "leadtime: " + p.leadtime.inspect
+          logger.debug "locked -before: " + p.locked.inspect
+          p.locked = true
+          logger.debug "locked - after: " + p.locked.inspect
+        end
+        logger.debug "@products (p)-after: " + p.inspect
+      end
+    end
+
 
     #logger.debug "lockday:" + @lockday.inspect
     #logger.debug "locked:" +  @locked.inspect
@@ -246,6 +275,7 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
+    @order.locked = false
     logger.debug "@order - passed in: " + @order.inspect
     # now create the order log record
     @log = Orderlog.new

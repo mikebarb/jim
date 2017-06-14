@@ -27,7 +27,15 @@ class UsersController < ApplicationController
   def editdayshop
     unless session[:user_id].nil?  # check that we are logged in
       @user = User.where(id: session[:user_id])
-      @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+      @shop_list = Shop.find_by_sql [ "
+        select u.id as user_id, u.name, s.name, s.id as shop_id
+        FROM shops AS s
+        JOIN usershops AS x ON x.shop_id = s.id
+        JOIN users AS u ON u.id =x.user_id
+        WHERE user_id = ?
+      ", session[:user_id] ]
+      @shop_options = @shop_list.map{ |u| [u.name]}
+      logger.debug "@shop_options: " + @shop_options.inspect
     else
       redirect_to users_url, notice: 'User is not logged in!!!'
     end

@@ -21,11 +21,27 @@ class LockdaysController < ApplicationController
   def edit
   end
 
+  # POST /locktoday
+  def locktoday
+    @lockday = Lockday.new()
+    @lockday.day = session[:user_day]
+    @lockday.locked = true
+    @lockday.user_id = session[:user_id]
+    respond_to do |format|
+      if @lockday.save
+        format.html { redirect_to ordersedit_path, notice: 'Lockday was successfully created.' }
+        format.json { render :show, status: :created, location: @lockday }
+      else
+        format.html { render :new }
+        format.json { render json: @lockday.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # POST /lockdays
   # POST /lockdays.json
   def create
     @lockday = Lockday.new(lockday_params)
-
     respond_to do |format|
       if @lockday.save
         format.html { redirect_to @lockday, notice: 'Lockday was successfully created.' }

@@ -5,6 +5,7 @@ class UsershopsController < ApplicationController
   # GET /usershops.json
   def index
     @usershops = Usershop.all
+                        .order(:user_id, :shop_id)
   end
 
   # GET /usershops/1

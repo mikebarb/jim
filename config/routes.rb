@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :orderlogs
   resources :recipes
   resources :ingredients
+  post 'locktoday', to: 'lockdays#locktoday'
   resources :lockdays
   get 'reports/baker'
   get 'reports/deliver'
