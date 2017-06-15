@@ -23,8 +23,19 @@ class LockdaysController < ApplicationController
 
   # POST /locktoday
   def locktoday
+    # Need to copy over the prices from the prouduct to the order
+    # for all orders for the day in your session and covers all shopes.
+    @thisday = session[:user_day]
+    @orders = Order.where(day: @thisday)
+    logger.debug "@orders: " + @orders.inspect
+    @orders.each do |myorder|
+      myorder.cost = myorder.product.price
+      myorder.save
+    end
+    # lock this day you currently have selected in your session
+    # simply add a record to the lockday table.
     @lockday = Lockday.new()
-    @lockday.day = session[:user_day]
+    @lockday.day = @thisday
     @lockday.locked = true
     @lockday.user_id = session[:user_id]
     respond_to do |format|

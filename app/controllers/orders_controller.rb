@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   # GET /productshop
   def productshop
     @prodshop = Order.find_by_sql ["
-      SELECT o.id, p.title, s.name, o.quantity, p.price
+      SELECT o.id, p.title, s.name, o.quantity, p.price, o.cost
       FROM orders AS o
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN shops AS s ON o.shop_id = s.id
@@ -64,7 +64,7 @@ class OrdersController < ApplicationController
       thisprod = entry.title    #row - i
       thisshop = entry.name     #col - j
       @summary[@rowindex[thisprod]][@colindex[thisshop]]["value"]   = entry.quantity
-      @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.price
+      @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.cost          #was price for product price, now from order table
       @summary[@rowindex[thisprod]][1]["value"] += entry.quantity
     end
     j=1
@@ -211,36 +211,36 @@ class OrdersController < ApplicationController
       WHERE p.inactive = false
       ORDER BY s.name, p.title
     ", @current_day, @current_shop_id ]
-     logger.debug "@products: " + @myproducts.inspect
+     #logger.debug "@products: " + @myproducts.inspect
 
     # check if this day has been locked by the baker
     # shown by the delivery day being added to the locked table
     @lockday = Lockday
              .where("day = ?", @current_day)
     @locked = @lockday.count
-    logger.debug "@locked: " + @locked.inspect
+    #logger.debug "@locked: " + @locked.inspect
 
     # If it is not locked by the baker, then need to check if product items should not be updated 
     # Need to now do swom work to see if any order for today should be locked
     # Need to reference midnight - start of delivery day being processed.
     timedeliveryday = @current_day.to_time                  # epoch time of the currnt day at midnight
-    logger.debug "timedeliveryday: " + timedeliveryday.inspect
+    #logger.debug "timedeliveryday: " + timedeliveryday.inspect
     timenow = Time.now                                      # epoch time of this  instant
-    logger.debug "timenow: " + timenow.inspect
+    #logger.debug "timenow: " + timenow.inspect
     hoursdifference = (timedeliveryday - timenow)/3600      # how many hour till this order is due for delivery
-    logger.debug "hoursdifference: " + hoursdifference.inspect
+    #logger.debug "hoursdifference: " + hoursdifference.inspect
 
     if @locked == 0                                           # if delivery day is locked, no finer checking required 
       @products.each do |p|                                 # check if individual products need to be locked
-        logger.debug "@products (p)-before: " + p.inspect
+        #logger.debug "@products (p)-before: " + p.inspect
         if(hoursdifference < p.leadtime)                             # order is OK to update
-          logger.debug "hoursdifference: " + hoursdifference.inspect
-          logger.debug "leadtime: " + p.leadtime.inspect
-          logger.debug "locked -before: " + p.locked.inspect
+          #logger.debug "hoursdifference: " + hoursdifference.inspect
+          #logger.debug "leadtime: " + p.leadtime.inspect
+          #logger.debug "locked -before: " + p.locked.inspect
           p.locked = true
-          logger.debug "locked - after: " + p.locked.inspect
+          #logger.debug "locked - after: " + p.locked.inspect
         end
-        logger.debug "@products (p)-after: " + p.inspect
+        #logger.debug "@products (p)-after: " + p.inspect
       end
     end
 
