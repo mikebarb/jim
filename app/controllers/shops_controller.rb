@@ -53,13 +53,14 @@ class ShopsController < ApplicationController
 
   # DELETE /shops/1
   # DELETE /shops/1.json
-  def destroy
-    @shop.destroy
-    respond_to do |format|
-      format.html { redirect_to shops_url, notice: 'Shop was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # not not allow this to be destroyed as is link to both historical orders and to order audit trails.
+  ###def destroy
+  ###  @shop.destroy
+  ###  respond_to do |format|
+  ###    format.html { redirect_to shops_url, notice: 'Shop was successfully destroyed.' }
+  ###    format.json { head :no_content }
+  ###  end
+  ###end
 
   private
     # Use callbacks to share common setup or constraints between actions.

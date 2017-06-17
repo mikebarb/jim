@@ -68,6 +68,7 @@ $(document).ready(function() {
                                   day: myday,
                                   quantity: thisqty,
                                   locked: 0,
+                                  cost: 0,
                                   user_id: myuser_id
                                 },
                         origqty: thisorigqty

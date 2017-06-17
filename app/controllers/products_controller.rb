@@ -37,9 +37,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
-    logger.debug "products controller - @product: " + @product.inspect
     @sector_options = Sector.all.map{ |u| [u.name, u.id] }
-    logger.debug "products controller - @sector_options: " + @sector_options.inspect
   end
 
   # POST /products
@@ -74,13 +72,15 @@ class ProductsController < ApplicationController
 
   # DELETE /products/1
   # DELETE /products/1.json
-  def destroy
-    @product.destroy
-    respond_to do |format|
-      format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # never what a product destroyed as it it linked to the orders
+  # Can inactive through the edit panel.
+  ###def destroy
+  ###  @product.destroy
+  ###  respond_to do |format|
+  ###    format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
+  ###    format.json { head :no_content }
+  ###  end
+  ###end
 
   private
     # Use callbacks to share common setup or constraints between actions.

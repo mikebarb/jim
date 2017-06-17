@@ -11,7 +11,7 @@ class OrderlogsController < ApplicationController
       INNER JOIN products AS p ON p.id = o.product_id
       INNER JOIN shops AS s ON s.id = o.shop_id
       INNER JOIN users AS u ON u.id = o.user_id
-      ORDER BY o.created_at
+      ORDER BY o.id DESC
     "]
     
   end
@@ -27,23 +27,26 @@ class OrderlogsController < ApplicationController
       INNER JOIN shops AS s ON s.id = o.shop_id
       INNER JOIN users AS u ON u.id = o.user_id
       AND o.day = ? AND o.shop_id = ?
-      ORDER BY o.created_at
+      ORDER BY o.id DESC
     ", @current_day, @current_shop_id ]
   end
 
   # GET /orderlogs/1
   # GET /orderlogs/1.json
-  def show
-  end
+  # no real need for a show - index shows everything needed.
+  ###def show
+  ###end
 
   # GET /orderlogs/new
-  def new
-    @orderlog = Orderlog.new
-  end
+  # audit log - not to be created by a person manually
+  ###def new
+  ###  @orderlog = Orderlog.new
+  ###end
 
   # GET /orderlogs/1/edit
-  def edit
-  end
+  # audit log - is never edited.
+  ###def edit
+  ###end
 
   # POST /orderlogs
   # POST /orderlogs.json
@@ -63,27 +66,28 @@ class OrderlogsController < ApplicationController
 
   # PATCH/PUT /orderlogs/1
   # PATCH/PUT /orderlogs/1.json
-  def update
-    respond_to do |format|
-      if @orderlog.update(orderlog_params)
-        format.html { redirect_to @orderlog, notice: 'Orderlog was successfully updated.' }
-        format.json { render :show, status: :ok, location: @orderlog }
-      else
-        format.html { render :edit }
-        format.json { render json: @orderlog.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # audit record -never destroy or edit  def update
+  ###  respond_to do |format|
+  ###    if @orderlog.update(orderlog_params)
+  ###      format.html { redirect_to @orderlog, notice: 'Orderlog was successfully updated.' }
+  ###      format.json { render :show, status: :ok, location: @orderlog }
+  ###    else
+  ###      format.html { render :edit }
+  ###      format.json { render json: @orderlog.errors, status: :unprocessable_entity }
+  ###    end
+  ###  end
+  ###end
 
   # DELETE /orderlogs/1
   # DELETE /orderlogs/1.json
-  def destroy
-    @orderlog.destroy
-    respond_to do |format|
-      format.html { redirect_to orderlogs_url, notice: 'Orderlog was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # audit record -never destroy or edit
+  ###def destroy
+  ###  @orderlog.destroy
+  ###  respond_to do |format|
+  ###    format.html { redirect_to orderlogs_url, notice: 'Orderlog was successfully destroyed.' }
+  ###    format.json { head :no_content }
+  ###  end
+  ###end
 
   private
     # Use callbacks to share common setup or constraints between actions.

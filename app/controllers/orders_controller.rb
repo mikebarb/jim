@@ -80,7 +80,7 @@ class OrdersController < ApplicationController
 
   # GET /baker
   def bakers
-    logger.debug "bakers:" + @bakers.inspect
+    #logger.debug "bakers:" + @bakers.inspect
     @bakers = Order.find_by_sql ["
       SELECT SUM(quantity) as totalqty, p.title
       FROM orders AS o
@@ -98,7 +98,7 @@ class OrdersController < ApplicationController
     @lockday = Lockday
                  .where("day = ?", params[:day])
               
-    logger.debug "lockday:" + @lockday.inspect
+    #logger.debug "lockday:" + @lockday.inspect
   end
 
  # GET /bakerdoes
@@ -334,7 +334,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    logger.debug "@order: " + @order.inspect
+    #logger.debug "@order: " + @order.inspect
     # now create the order log record
     @log = Orderlog.new
     @log.day = @order.day
@@ -343,10 +343,10 @@ class OrdersController < ApplicationController
     @log.product_id = @order.product_id
     @log.quantity = 0
     @log.oldquantity = @order.quantity
-    logger.debug "logging record: " + @log.inspect
+    #logger.debug "logging record: " + @log.inspect
     @order.destroy
     @log.save
-    logger.debug "logging record after save: " + @log.inspect
+    #logger.debug "logging record after save: " + @log.inspect
     respond_to do |format|
       format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
       format.json { head :no_content }
