@@ -54,10 +54,20 @@ class IngredientsController < ApplicationController
   # DELETE /ingredients/1
   # DELETE /ingredients/1.json
   def destroy
-    @ingredient.destroy
     respond_to do |format|
-      format.html { redirect_to ingredients_url, notice: 'Ingredient was successfully destroyed.' }
-      format.json { head :no_content }
+      if @ingredient.destroy
+        format.html { redirect_to ingredients_url, notice: 'Ingredient was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        if @ingredient.errors.any?
+          @notice_message = "prohibited this ingredient from being destroyed"
+          @ingredient.errors.full_messages.each do |message|
+            @notice_message += ": " + message
+          end
+        end
+        format.html { redirect_to ingredients_url, notice: @notice_message  }
+        format.json { head :no_content }
+      end
     end
   end
 

@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :check_login
+  ###before_action :check_login
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /productshop
@@ -366,14 +366,14 @@ class OrdersController < ApplicationController
     end
     
     # Check that the user has logged in
-    def check_login
-      @current_user = session[:user_name]
-      if @current_user.nil? 
-        redirect_to login_url, alert: "login required to view & update Orders!!"
-      end
-      @current_shop = session[:user_shop]
-      @current_day = session[:user_day]
-      @current_shop_id = session[:user_shop_id]
-      @current_user_id = session[:user_id]
-    end
+    ###def check_login
+    ###  @current_user = session[:user_name]
+    ###  if @current_user.nil? 
+    ###    redirect_to login_url, alert: "login required to view & update Orders!!"
+    ###  end
+    ###  @current_shop = session[:user_shop]
+    ###  @current_day = session[:user_day]
+    ###  @current_shop_id = session[:user_shop_id]
+    ###  @current_user_id = session[:user_id]
+    ###end
 end

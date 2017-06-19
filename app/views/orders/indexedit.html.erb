@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <table>
-  <tr><td>user</td><td><%= @current_user %></td><td id="user_id"><%= @current_user_id %></td><td></td><%= link_to 'Log Out', logout_path %></tr>
+  <tr><td>user</td><td><%= @current_user %></td><td id="user_id"><%= @current_user_id %></td><td><%= link_to 'Log Out', logout_path %></td></tr>
   <tr><td>shop</td><td><%= @current_shop %></td><td id="shop_id"><%= @current_shop_id %></td><td></td></tr>
   <tr><td>deliver</td><td id="day"><%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</td><td></td>><td>
     <% if @locked > 0 %>

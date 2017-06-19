@@ -24,9 +24,9 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
-    logger.debug "@shop_options: " + @shop_optons.inspect
+    #logger.debug "@shop_options: " + @shop_optons.inspect
     @role_options = ["shop", "baker", "owner", "root", "none"]
-    logger.debug "@role_options: " + @role_optons.inspect
+    #logger.debug "@role_options: " + @role_optons.inspect
   end
 
   # GET /users/1/editdayshop
@@ -41,7 +41,7 @@ class UsersController < ApplicationController
         WHERE user_id = ?
       ", session[:user_id] ]
       @shop_options = @shop_list.map{ |u| [u.name]}
-      logger.debug "@shop_options: " + @shop_options.inspect
+      #logger.debug "@shop_options: " + @shop_options.inspect
     else
       redirect_to users_url, notice: 'User is not logged in!!!'
     end
@@ -83,38 +83,38 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def updatedayshop
     @user = User.find(user_params[:id])
-    logger.debug "@user:" + @user.inspect
+    #logger.debug "@user:" + @user.inspect
 
     @myparams = user_params
-    logger.debug "@myparams:" + @myparams.inspect
+    #logger.debug "@myparams:" + @myparams.inspect
 
     @currentparams = @user.attributes
-    logger.debug "@currentparams:" + @currentparams.inspect
+    #logger.debug "@currentparams:" + @currentparams.inspect
 
     @myshop = user_params[:shop]
-    logger.debug "@myshop:" + @myshop.inspect
+    #logger.debug "@myshop:" + @myshop.inspect
 
     #@myday =Date.new @myparams["day(1i)"].to_i, @myparams["day(2i)"].to_i, @myparams["day(3i)"].to_i
     @myday = @myparams["day"]
-    logger.debug "@myparams day:" + @myparams["day"]
-    logger.debug "@myday:" + @myday.inspect
+    #logger.debug "@myparams day:" + @myparams["day"]
+    #logger.debug "@myday:" + @myday.inspect
     
     if @user.shop != @myshop
-      logger.debug "shop has changed"
+      #logger.debug "shop has changed"
       unless @myshop.nil?
-        logger.debug "shop has valid value" + @myshop.inspect
+        #logger.debug "shop has valid value" + @myshop.inspect
         @user.update_attribute(:shop, @myshop)
       end
     end
     
     if @user.day != @myday
-      logger.debug "day has changed"
+      #logger.debug "day has changed"
       unless @myday.nil?
-        logger.debug "day has valid value" + @myday.inspect
+        #logger.debug "day has valid value" + @myday.inspect
         @user.update_attribute(:day, @myday)
       end
     end
-    logger.debug "@user:" + @user.inspect
+    #logger.debug "@user:" + @user.inspect
 
     respond_to do |format|
       if @user.save

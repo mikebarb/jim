@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  #skip_before_action :authorise
 
   # GET /displayproducts
   def display
@@ -18,6 +19,7 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
+    logger.debug "in products controller - index action"
     #@products = Product.all
     #            .order("title")
     @products = Product.includes(:sector).all
