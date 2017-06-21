@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :recipes
   resources :ingredients
   post 'locktoday', to: 'lockdays#locktoday'
-  resources :lockdays
+  resources :lockdays, :only => [:index, :new, :create, :destroy]
   get 'reports/baker'
   get 'reports/deliver'
 

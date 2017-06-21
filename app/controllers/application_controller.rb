@@ -8,7 +8,10 @@ class ApplicationController < ActionController::Base
     protected
     
         def authorise
-            
+            # This module controls access to all the controllers based on roles assigned to users
+            # root: can access anything
+            # not logged in or login with role none: can only get to login page
+            # all other roles controlled by the hash table based on controller and action.
             
             # Check that the user has logged in
             @current_user = session[:user_name]
@@ -46,28 +49,94 @@ class ApplicationController < ActionController::Base
 
             @access =   {
                             "ingredients" =>    {
-                                                    "index"     => ["baker", "owner", ],
-                                                    "show"      => ["baker", "owner", ],
-                                                    "new"       => ["baker", "owner", ],
-                                                    "edit"      => ["baker", "owner", ],
-                                                    "create"    => ["baker", "owner", ],
-                                                    "update"    => ["baker", "owner", ],
-                                                    "destroy"   => ["baker", "owner", ]
+                                                    "index"     => ["owner", "baker"],
+                                                    "show"      => ["owner", "baker"],
+                                                    "new"       => ["owner", "baker"],
+                                                    "edit"      => ["owner", "baker"],
+                                                    "create"    => ["owner", "baker"],
+                                                    "update"    => ["owner", "baker"],
+                                                    "destroy"   => ["owner", "baker"]
+                                                },
+                            "lockdays" =>    {
+                                                    "index"     => ["owner", "baker"],
+                                                    "new"       => ["owner"],
+                                                    "create"    => ["owner", "baker"],
+                                                    "destroy"   => ["owner", "baker"],
+                                                    "locktoday" => ["owner", "baker"]
+                                                },
+                            "orderlogs" =>    {
+                                                    "index"     => ["owner"],
+                                                    "create"    => ["owner", "baker", "shop"],
+                                                    "indexdayshop" => ["owner", "baker", "shop"]
                                                 },
                             "orders" =>         {
-                                                    "index"     => ["owner", ],
-                                                    "show"      => ["owner", ],
-                                                    "new"       => ["owner", ],
-                                                    "edit"      => ["owner", ],
-                                                    "create"    => ["baker", "owner", ],
-                                                    "update"    => ["baker", "owner", ],
-                                                    "destroy"   => ["baker", "owner", ],
-                                                    "productshop" => ["baker", "owner", ],
-                                                    "baker"     => ["baker", "owner", ],
-                                                    "bakerdoes" => ["baker", "owner", ],
-                                                    "delivery"  => ["baker", "owner", ],
-                                                    "deliverypdf" => ["baker", "owner", ],
-                                                    "indexedit" => ["shop", "baker", "owner", ]
+                                                    "index"     => ["owner"],
+                                                    "show"      => ["owner"],
+                                                    "new"       => ["owner"],
+                                                    "edit"      => ["owner"],
+                                                    "create"    => ["owner", "baker", "shop"],
+                                                    "update"    => ["owner", "baker", "shop"],
+                                                    "destroy"   => ["owner", "baker", "shop"],
+                                                  "productshop" => ["owner", "baker"],
+                                                    "baker"     => ["owner", "baker"],
+                                                    "bakerdoes" => ["owner", "baker"],
+                                                    "delivery"  => ["owner", "baker"],
+                                                  "deliverypdf" => ["owner", "baker"],
+                                                    "indexedit" => ["owner", "baker", "shop"]
+                                                },
+                            "products" =>       {
+                                                    "index"     => ["owner", "baker"],
+                                                    "show"      => ["owner"],
+                                                    "new"       => ["owner"],
+                                                    "edit"      => ["owner"],
+                                                    "create"    => ["owner"],
+                                                    "update"    => ["owner"],
+                                                    "display"   => ["owner", "baker", "shop"]
+                                                },
+                            "recipes" =>       {
+                                                    "index"     => ["owner", "baker"],
+                                                    "show"      => ["owner", "baker"],
+                                                    "new"       => ["owner", "baker"],
+                                                    "edit"      => ["owner", "baker"],
+                                                    "create"    => ["owner", "baker"],
+                                                    "update"    => ["owner", "baker"],
+                                                    "destroy"   => ["owner", "baker"]
+                                                },
+                            "sectors" =>       {
+                                                    "index"     => ["owner"],
+                                                    "show"      => ["owner"],
+                                                    "new"       => ["owner"],
+                                                    "edit"      => ["owner"],
+                                                    "create"    => ["owner"],
+                                                    "update"    => ["owner"],
+                                                    "destroy"   => ["owner"]
+                                                },
+                            "shops" =>       {
+                                                    "index"     => ["owner"],
+                                                    "show"      => ["owner"],
+                                                    "new"       => ["owner"],
+                                                    "edit"      => ["owner"],
+                                                    "create"    => ["owner"],
+                                                    "update"    => ["owner"]
+                                                },
+                            "users" =>       {
+                                                    "index"     => ["owner"],
+                                                    "show"      => ["owner"],
+                                                    "new"       => ["owner"],
+                                                    "edit"      => ["owner"],
+                                                    "create"    => ["owner"],
+                                                    "update"    => ["owner"],
+                                                  "editdayshop" => ["owner", "baker", "shop"],
+                                                "updatedayshop" => ["owner", "baker", "shop"]
+                                                },
+                            "usershops" =>       {
+                                                    "index"     => ["owner"],
+                                                    "show"      => ["owner"],
+                                                    "new"       => ["owner"],
+                                                    "edit"      => ["owner"],
+                                                    "create"    => ["owner"],
+                                                    "update"    => ["owner"],
+                                                    "destroy"   => ["owner"]
                                                 },
                         }
         
@@ -86,6 +155,43 @@ class ApplicationController < ActionController::Base
                     redirect_to ordersedit_url, notice: "You do not have permission to access this function"
                     return false
                 end
+            end
+        end
+        
+        def get_shop_options
+            # users with role of shop can ony see the shops they are linked to (usershops table)
+            # all other logged in users can see all shops.
+            if @current_role == "shop"
+                logger.debug "get_shop_options - in role shop"
+                @shop_list = Shop.find_by_sql [ "
+                    select DISTINCT ON (s.name) s.name, u.id as user_id, u.name as user_name, s.id as shop_id
+                    FROM shops AS s
+                    JOIN usershops AS x ON x.shop_id = s.id
+                    JOIN users AS u ON u.id =x.user_id
+                    WHERE user_id = ?
+                ", session[:user_id] ]
+            else
+                logger.debug "get_shop_options - get all shops"
+                @shop_list = Shop.find_by_sql [ "
+                    select DISTINCT ON (s.name) s.name, u.id as user_id, u.name as user_name, s.id as shop_id
+                    FROM shops AS s
+                    JOIN usershops AS x ON x.shop_id = s.id
+                    JOIN users AS u ON u.id =x.user_id
+                "]
+            end
+            @shop_options = @shop_list.map{ |u| [u.name]}
+            logger.debug "@shop_options: " + @shop_options.inspect
+        end
+        
+        # set a flag to allow order updates to be done for certain roles
+        # normally, updates are automatically prevented after the delivery day starts
+        # or for some products, even earlier controlled by the product leadtime.
+        # bakers and owners need to be able to bypass this allow them to do updates untill the day is manually locked.
+        def check_allow_update_until_daylocked
+            if ["baker", "owner"].include? @current_role
+                return true
+            else
+                return false
             end
         end
 end

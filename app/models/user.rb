@@ -4,4 +4,5 @@ class User < ApplicationRecord
   
   has_many :usershops
   has_many :shops, through: :usershops
+  has_many :lockdays
 end

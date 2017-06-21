@@ -18,12 +18,12 @@
 
   <div class="field">
     <%= f.label :locked %>
-    <%= f.text_field :locked %>
+    <%= f.select :locked, [TRUE, FALSE] %>
   </div>
 
   <div class="field">
     <%= f.label :user_id %>
-    <%= f.text_field :user_id %>
+    <%= f.hidden_field :user_id, :value => @current_user_id, :readonly => true %>
   </div>
 
   <div class="actions">

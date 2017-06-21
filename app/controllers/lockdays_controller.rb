@@ -9,8 +9,8 @@ class LockdaysController < ApplicationController
 
   # GET /lockdays/1
   # GET /lockdays/1.json
-  def show
-  end
+  ###def show
+  ###end
 
   # GET /lockdays/new
   def new
@@ -18,8 +18,8 @@ class LockdaysController < ApplicationController
   end
 
   # GET /lockdays/1/edit
-  def edit
-  end
+  ###def edit
+  ###end
 
   # POST /locktoday
   def locktoday
@@ -55,8 +55,8 @@ class LockdaysController < ApplicationController
     @lockday = Lockday.new(lockday_params)
     respond_to do |format|
       if @lockday.save
-        format.html { redirect_to @lockday, notice: 'Lockday was successfully created.' }
-        format.json { render :show, status: :created, location: @lockday }
+        format.html { redirect_to lockdays_path, notice: 'Lockday was successfully created.' }
+        format.json { render :index, status: :created, location: @lockday }
       else
         format.html { render :new }
         format.json { render json: @lockday.errors, status: :unprocessable_entity }
@@ -66,17 +66,17 @@ class LockdaysController < ApplicationController
 
   # PATCH/PUT /lockdays/1
   # PATCH/PUT /lockdays/1.json
-  def update
-    respond_to do |format|
-      if @lockday.update(lockday_params)
-        format.html { redirect_to @lockday, notice: 'Lockday was successfully updated.' }
-        format.json { render :show, status: :ok, location: @lockday }
-      else
-        format.html { render :edit }
-        format.json { render json: @lockday.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  ###def update
+  ###  respond_to do |format|
+  ###    if @lockday.update(lockday_params)
+  ###      format.html { redirect_to @lockday, notice: 'Lockday was successfully updated.' }
+  ###      format.json { render :show, status: :ok, location: @lockday }
+  ###    else
+  ###      format.html { render :edit }
+  ###      format.json { render json: @lockday.errors, status: :unprocessable_entity }
+  ###    end
+  ###  end
+  ###end
 
   # DELETE /lockdays/1
   # DELETE /lockdays/1.json

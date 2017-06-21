@@ -45,12 +45,7 @@
     <tr class="product" id="<%= product.product_id %>">
       <td class="product_id"><%= product.product_id %></td>
       <td class="title"><%= product.title %></td>
-      <% if @current_user == "James" %>
-        <td>
-          <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
-          <p class="origqty"><%= product.quantity =%></p>
-        </td>
-      <% elsif (@locked != 0) or (product.locked?) %>
+      <% if product.locked? %>
         <td class="qty_locked"><%= product.quantity %></td>
       <% else %>
         <td>
