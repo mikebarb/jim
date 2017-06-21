@@ -126,6 +126,7 @@ class ApplicationController < ActionController::Base
                                                     "edit"      => ["owner"],
                                                     "create"    => ["owner"],
                                                     "update"    => ["owner"],
+                                                    "destroy"   => ["owner"],
                                                   "editdayshop" => ["owner", "baker", "shop"],
                                                 "updatedayshop" => ["owner", "baker", "shop"]
                                                 },

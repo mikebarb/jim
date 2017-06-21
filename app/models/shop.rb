@@ -7,4 +7,5 @@ class Shop < ApplicationRecord
     
     has_many :usershops
     has_many :users, through: :usershops
+    
 end

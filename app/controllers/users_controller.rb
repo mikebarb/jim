@@ -148,13 +148,23 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   # Never want to destroy users as they linked in the orders audit trail.
   # To disable a user, set the role to "none"
-  ###def destroy
-  ###  @user.destroy
-  ###  respond_to do |format|
-  ###    format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-  ###    format.json { head :no_content }
-  ###  end
-  ###end
+  def destroy
+    respond_to do |format|
+      if @user.destroy
+        format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        if @user.errors.any?
+          @notice_message = "prohibited this user from being destroyed"
+          @user.errors.full_messages.each do |message|
+            @notice_message += ": " + message
+          end
+        end
+        format.html { redirect_to users_url, notice: @notice_message }
+        format.json { head :no_content }      
+      end
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -164,7 +174,9 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:id, :name, :email, :password, :password_confirmation, :role, :day, :shop)
+      params.require(:user).permit(:id, :name, :email, :password, :password_confirmation, :role, :day, :shop,
+        :shop_ids => []
+      )
     end
     
     # consistent generatoion of the role options across the actions

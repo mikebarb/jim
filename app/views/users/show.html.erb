@@ -16,6 +16,16 @@
 </p>
 
 <p>
+<strong>Managed Shops</strong >
+  <br>This user can manage orders for these shops
+  <br>Note: only applies to users with role "shop"<br>
+  
+  <% @user.shops.each do |shop| %>
+    => <%= shop.name %><br>
+  <% end %>
+</p>
+   
+<p>
   <strong>Day:</strong>
   <%= @user.day %>
 </p>

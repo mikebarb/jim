@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   post 'userdayshop(/:id)', to: 'users#updatedayshop'
   patch 'userdayshop(/:id)', to: 'users#updatedayshop'
   get 'userdayshop', to: 'users#editdayshop'
-  resources :users,  :except => [:destroy]
+  resources :users
   resources :shops,  :except => [:destroy]
   get 'displayproducts', to: 'products#display'
   resources :products, :except => [:destroy]
