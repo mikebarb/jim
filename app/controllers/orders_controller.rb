@@ -64,7 +64,9 @@ class OrdersController < ApplicationController
       thisprod = entry.title    #row - i
       thisshop = entry.name     #col - j
       @summary[@rowindex[thisprod]][@colindex[thisshop]]["value"]   = entry.quantity
-      @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.cost          #was price for product price, now from order table
+      unless entry.cost.nil?    # if has not been locked yet, treat as 0 value.
+        @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.cost          #was price for product price, now from order table
+      end
       @summary[@rowindex[thisprod]][1]["value"] += entry.quantity
     end
     j=1
@@ -78,7 +80,7 @@ class OrdersController < ApplicationController
   end
 
 
-  # GET /baker
+  # GET /bakers
   def bakers
     #logger.debug "bakers:" + @bakers.inspect
     @bakers = Order.find_by_sql ["
@@ -104,12 +106,12 @@ class OrdersController < ApplicationController
  # GET /bakerdoes
   def bakerdoes
     @bakerdoes = Order.find_by_sql ["
-      SELECT sum(quantity * r.amount) as totalqty, i.item
+      SELECT sum(quantity * r.amount) as totalqty, i.item, i.unit
       FROM orders AS o
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN recipes AS r ON p.id = r.product_id
       INNER JOIN ingredients AS i ON r.ingredient_id = i.id
-      GROUP BY i.item
+      GROUP BY i.item, i.unit
     ", @current_day]
   end
 

@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
     protect_from_forgery with: :exception
-    logger.debug "application controller"
-
 
     before_action :authorise
+    before_action :make_menus
+    
 
     protected
     
@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
                                                     "update"    => ["owner", "baker", "shop"],
                                                     "destroy"   => ["owner", "baker", "shop"],
                                                   "productshop" => ["owner", "baker"],
-                                                    "baker"     => ["owner", "baker"],
+                                                    "bakers"     => ["owner", "baker"],
                                                     "bakerdoes" => ["owner", "baker"],
                                                     "delivery"  => ["owner", "baker"],
                                                   "deliverypdf" => ["owner", "baker"],
@@ -141,18 +141,13 @@ class ApplicationController < ActionController::Base
                                                 },
                         }
         
-            logger.debug "@access: " + @access.inspect
             @temp = @access.dig @current_controller, @current_action
-            logger.debug "@temp: " + @temp.inspect
             if @temp.nil?
                 redirect_to ordersedit_url, notice: "This function is not available"
             else
-                logger.debug "@current_role: " + @current_role.inspect
                 if @temp.include? @current_role
-                    logger.debug "You have permission to access this function"
                     return true
                 else
-                    logger.debug "You do not have permission to access this function"
                     redirect_to ordersedit_url, notice: "You do not have permission to access this function"
                     return false
                 end
@@ -163,7 +158,7 @@ class ApplicationController < ActionController::Base
             # users with role of shop can ony see the shops they are linked to (usershops table)
             # all other logged in users can see all shops.
             if @current_role == "shop"
-                logger.debug "get_shop_options - in role shop"
+                #logger.debug "get_shop_options - in role shop"
                 @shop_list = Shop.find_by_sql [ "
                     select DISTINCT ON (s.name) s.name, u.id as user_id, u.name as user_name, s.id as shop_id
                     FROM shops AS s
@@ -172,7 +167,7 @@ class ApplicationController < ActionController::Base
                     WHERE user_id = ?
                 ", session[:user_id] ]
             else
-                logger.debug "get_shop_options - get all shops"
+                #logger.debug "get_shop_options - get all shops"
                 @shop_list = Shop.find_by_sql [ "
                     select DISTINCT ON (s.name) s.name, u.id as user_id, u.name as user_name, s.id as shop_id
                     FROM shops AS s
@@ -181,7 +176,7 @@ class ApplicationController < ActionController::Base
                 "]
             end
             @shop_options = @shop_list.map{ |u| [u.name]}
-            logger.debug "@shop_options: " + @shop_options.inspect
+            #logger.debug "@shop_options: " + @shop_options.inspect
         end
         
         # set a flag to allow order updates to be done for certain roles
@@ -193,6 +188,91 @@ class ApplicationController < ActionController::Base
                 return true
             else
                 return false
+            end
+        end
+
+
+        def make_menus
+            if ["owner", "root"].include? @current_role
+                # can do everything
+                @menu =[
+                        ["Shopping", 
+                            [   ["Ordering",    "ordersedit"],
+                                ["Products",    "displayproducts"],
+                                ["Order Logs", "orderlogdayshop"],
+                                ["Logout",   "logout"]
+                            ]
+                        ], 
+                        ["Baking", 
+                            [   ["Whiteboard",  "ordersproductshops"],
+                                ["Products to Bake", "ordersbakers"],
+                                ["Dough Listing", "ordersbakerdoes"],
+                                ["Recipes", "recipes"],
+                                ["Ingredients", "ingredients"],
+                                ["Locked days", "lockdays"]
+                            ]
+                        ],
+                        ["Delivery", 
+                            [   ["Packaging Summary",  "ordersproductshops"],
+                                ["Delivery Dockets", "ordersdelivery"]
+                            ]
+                        ],
+                        ["Manage", 
+                            [   ["Users",  "users"],
+                                ["Shops", "shops"],
+                                ["Users & Shops", "usershops"],
+                                ["Products", "products"],
+                                ["Product Categories", "sectors"],
+                                ["All Orders", "orders"]
+                            ]
+                        ],
+                        ["Admin", 
+                            [   ["Locking days", "lockdays"],
+                                ["Order Logs", "orderlogs"]
+                            ]
+                        ]
+                       ]
+            elsif ["baker"].include? @current_role                       
+                @menu =[
+                        ["Shopping", 
+                            [   ["Ordering",    "ordersedit"],
+                                ["Products",    "displayproducts"],
+                                ["Order Logs", "orderlogdayshop"],
+                                ["Logout",   "logout"]
+                            ]
+                        ], 
+                        ["Baking", 
+                            [   ["Whiteboard",  "ordersproductshops"],
+                                ["Products to Bake", "ordersbakers"],
+                                ["Dough Listing", "ordersbakerdoes"],
+                                ["Recipes", "recipes"],
+                                ["Ingredients", "ingredients"],
+                                ["Locked days", "lockdays"]
+                            ]
+                        ],
+                        ["Delivery", 
+                            [   ["Packaging Summary",  "ordersproductshops"],
+                                ["Delivery Dockets", "ordersdelivery"]
+                            ]
+                        ]
+                     ]
+            elsif ["shop"].include? @current_role                       
+                @menu =[
+                        ["Shopping", 
+                            [   ["Ordering",    "ordersedit"],
+                                ["Products",    "displayproducts"],
+                                ["Order Logs", "orderlogdayshop"],
+                                ["Logout",   "logout"]                            ]
+                        ]
+                     ]                   
+            elsif ["none", nil].include? @current_role
+                    # minimum capability - login only, will makes menu logic work
+                    @menu =[
+                        ["Shopping", 
+                            [   ["Login",    "login"]
+                            ]
+                        ]
+                     ]                       
             end
         end
 end
