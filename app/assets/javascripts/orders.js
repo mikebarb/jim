@@ -166,5 +166,5 @@ var ordersready = function() {
 };
 
 $(document).ready(ordersready);
-$(document).on('turbolinks:load', ordersready);
+//$(document).on('turbolinks:load', ordersready);
 
