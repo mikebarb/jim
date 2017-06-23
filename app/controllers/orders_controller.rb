@@ -1,11 +1,11 @@
 class OrdersController < ApplicationController
-  before_action :check_login
+  ###before_action :check_login
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /productshop
   def productshop
     @prodshop = Order.find_by_sql ["
-      SELECT o.id, p.title, s.name, o.quantity, p.price
+      SELECT o.id, p.title, s.name, o.quantity, p.price, o.cost
       FROM orders AS o
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN shops AS s ON o.shop_id = s.id
@@ -64,7 +64,9 @@ class OrdersController < ApplicationController
       thisprod = entry.title    #row - i
       thisshop = entry.name     #col - j
       @summary[@rowindex[thisprod]][@colindex[thisshop]]["value"]   = entry.quantity
-      @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.price
+      unless entry.cost.nil?    # if has not been locked yet, treat as 0 value.
+        @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.cost          #was price for product price, now from order table
+      end
       @summary[@rowindex[thisprod]][1]["value"] += entry.quantity
     end
     j=1
@@ -78,9 +80,9 @@ class OrdersController < ApplicationController
   end
 
 
-  # GET /baker
+  # GET /bakers
   def bakers
-    logger.debug "bakers:" + @bakers.inspect
+    #logger.debug "bakers:" + @bakers.inspect
     @bakers = Order.find_by_sql ["
       SELECT SUM(quantity) as totalqty, p.title
       FROM orders AS o
@@ -98,18 +100,18 @@ class OrdersController < ApplicationController
     @lockday = Lockday
                  .where("day = ?", params[:day])
               
-    logger.debug "lockday:" + @lockday.inspect
+    #logger.debug "lockday:" + @lockday.inspect
   end
 
  # GET /bakerdoes
   def bakerdoes
     @bakerdoes = Order.find_by_sql ["
-      SELECT sum(quantity * r.amount) as totalqty, i.item
+      SELECT sum(quantity * r.amount) as totalqty, i.item, i.unit
       FROM orders AS o
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN recipes AS r ON p.id = r.product_id
       INNER JOIN ingredients AS i ON r.ingredient_id = i.id
-      GROUP BY i.item
+      GROUP BY i.item, i.unit
     ", @current_day]
   end
 
@@ -145,84 +147,95 @@ class OrdersController < ApplicationController
 
   # GET /ordersedit
   def indexedit
+  # stuff required for the user update of day and shops
+  logger.debug "current_user_id:" + @current_user_id.inspect
+  @user = User.find(@current_user_id)
+  logger.debug "@user:" + @user.inspect
+  @shop_options = get_shop_options
+  logger.debug "@shop_options: " + @shop_options.inspect
   # first up - check if there are already orders for this day
   # if not, give the user a chance to clone from an existing order
     @orders = Order.all
     .where("day = ? AND shop_id = ?", @current_day, @current_shop_id)
-
-    #logger.debug "@orders: " + @orders.inspect
-
-    if @orders.empty? then              # there are no orders for this day
-      #logger.debug "today's order array is empty."
+    if @orders.empty?                     # there are no orders for this day
       @noorders = true
-      #logger.debug "parameters: " + params.inspect
       @copy_from_day = params[:copyfrom]
-      #logger.debug "@copy_from_day: " + @copy_from_day.inspect
-      
       unless @copy_from_day.blank?        # parameters has provided a day to copy from
-        #logger.debug "copy_from_day parameters present " + @copy_from_day.inspect
         @orders_from = Order
                        .where("day =? AND shop_id = ?", @copy_from_day, @current_shop_id)
-        #logger.debug "@orders_from: " + @orders_from.inspect
         if @orders_from.empty?         # make sure there is somethign to copy
           @noorders = true
           @copymessage = "You tried to copy from a day (" + @copy_from_day + ") that has no orders!!!"
-          #logger.debug "You tried to copy from a day that has no orders!!!" + @copy_from_day
         else                          # now proceed with the copy
-          #logger.debug "copy the orders from " + params[:copyfrom] + " to " + params[:copyto];
           # determine fields for updating - copied orders and logging
           logfields = Hash.new
           logfields[:day] = @current_day
           logfields[:user_id] = @current_user_id
           logfields[:shop_id] = @current_shop_id
-          #logger.debug "logfields hash: " + logfields.inspect
           @orders_from.each do |order|
             @order_new = Order.new(logfields)
             @order_new.product_id = order.product_id
             @order_new.quantity = order.quantity
             @order_new.locked = false
-            #logger.debug "@order_new - just before saving: " + @order_new.inspect
             @order_new.save
             # now for the audit log on the Order updates, creates and deletes
             @log = Orderlog.new(logfields)
             @log.product_id = order.product_id
             @log.quantity = order.quantity
             @log.oldquantity = 0
-            #logger.debug "logging record: " + @log.inspect
             @log.save
           end
           @noorders = false           # orders now present for today
         end
       end
     else
-      #logger.debug "this order array has content."
       @noorders = false
     end
-    #logger.debug "@noorders: " + @noorders.inspect
-    #logger.debug "@copymessage: " + @copymessage.inspect
-
+    
     # We now process the normal display for ordering information.
     # Above this was simply detecting if this order was empty and what action to take.
     @products = Product.find_by_sql [ "
-      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id, s.name as sector_name, o.cost
+      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, p.inactive, o.id as order_id, o.quantity, o.shop_id, o.day, o.locked, o.user_id, s.name as sector_name, o.cost
       FROM products AS p
       LEFT OUTER JOIN orders AS o ON p.id = o.product_id AND o.day = ? AND o.shop_id = ?
       INNER JOIN sectors AS s ON p.sector_id = s.id 
+      WHERE p.inactive = false
       ORDER BY s.name, p.title
     ", @current_day, @current_shop_id ]
     
-    @lockday = Lockday
-             .where("day = ?", @current_day)
-    @locked = @lockday.count
-    
-    @user = User.where(id: @current_user_id)
-    @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
-    
+    ###logger.debug "@products: " + @products.inspect
 
-    #logger.debug "lockday:" + @lockday.inspect
-    #logger.debug "locked:" +  @locked.inspect
-    #logger.debug "products:" + @products.inspect
-    logger.debug "@shop_options: " + @shop_options.inspect
+    # Locked order items and days needs to be passed into the view simply.
+    # The lock attribute on the ordered product is set here but never saved.
+    # This order attribute is then used to determine if the view locks the 
+    # quantity field - so that it cannot be changed in the view.
+    #
+    # check if this day has been locked by the baker
+    # shown by the delivery day being added to the locked table
+    @locked = Lockday
+             .where("day = ?", @current_day)
+             .count
+    if @locked > 0
+      # So lock all the products in this order
+      @products.each do |p|  
+        p.locked = true
+      end
+    elsif ["baker", "owner"].include? @current_role 
+      # baker can overide individual locking limits based on time (but not if day is locked).
+      # do nothing - all enteries are already false   
+    else
+      # check if individual products need to be locked based on time of week.
+      # Need to now do some work to see if any ordere products for today should be locked
+      # Need to reference midnight as the start of delivery day being processed.
+      timedeliveryday = @current_day.to_time                  # epoch time of the currnt day at midnight
+      timenow = Time.now                                      # epoch time of this  instant
+      hoursdifference = (timedeliveryday - timenow)/3600      # how many hour till this order is due for delivery
+      @products.each do |p|
+        if(hoursdifference < p.leadtime)                             # order is OK to update
+          p.locked = true
+        end
+      end        
+    end
   end
 
   # GET /orders
@@ -250,6 +263,7 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
+    @order.locked = false
     logger.debug "@order - passed in: " + @order.inspect
     # now create the order log record
     @log = Orderlog.new
@@ -308,7 +322,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    logger.debug "@order: " + @order.inspect
+    #logger.debug "@order: " + @order.inspect
     # now create the order log record
     @log = Orderlog.new
     @log.day = @order.day
@@ -317,10 +331,10 @@ class OrdersController < ApplicationController
     @log.product_id = @order.product_id
     @log.quantity = 0
     @log.oldquantity = @order.quantity
-    logger.debug "logging record: " + @log.inspect
+    #logger.debug "logging record: " + @log.inspect
     @order.destroy
     @log.save
-    logger.debug "logging record after save: " + @log.inspect
+    #logger.debug "logging record after save: " + @log.inspect
     respond_to do |format|
       format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
       format.json { head :no_content }
@@ -336,18 +350,18 @@ class OrdersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
       #params.require(:id).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
-      params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id, :origqty)
+      params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id, :origqty, :cost)
     end
     
     # Check that the user has logged in
-    def check_login
-      @current_user = session[:user_name]
-      if @current_user.nil? 
-        redirect_to login_url, alert: "login required to view & update Orders!!"
-      end
-      @current_shop = session[:user_shop]
-      @current_day = session[:user_day]
-      @current_shop_id = session[:user_shop_id]
-      @current_user_id = session[:user_id]
-    end
+    ###def check_login
+    ###  @current_user = session[:user_name]
+    ###  if @current_user.nil? 
+    ###    redirect_to login_url, alert: "login required to view & update Orders!!"
+    ###  end
+    ###  @current_shop = session[:user_shop]
+    ###  @current_day = session[:user_day]
+    ###  @current_shop_id = session[:user_shop_id]
+    ###  @current_user_id = session[:user_id]
+    ###end
 end

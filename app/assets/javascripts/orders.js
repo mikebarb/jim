@@ -6,7 +6,8 @@
 
 /* global $ */
 
-$(document).ready(function() {
+//$(document).ready(function() {     
+var ordersready = function() {
     console.log("document ready");
     $(".sector").click(function(){
         console.log("sector clicked");
@@ -75,7 +76,6 @@ $(document).ready(function() {
             //console.log("myuser_id:" + myuser_id);
             $.ajax({
                 type: 'POST',
-                //url: "https://baker-micmac.c9users.io/orders",
                 url: "orders",
                 data: {
                         order: {
@@ -84,6 +84,7 @@ $(document).ready(function() {
                                   day: myday,
                                   quantity: thisqty,
                                   locked: 0,
+                                  cost: 0,
                                   user_id: myuser_id
                                 },
                         origqty: thisorigqty
@@ -162,5 +163,8 @@ $(document).ready(function() {
             });
         }
     });
-});
+};
+
+$(document).ready(ordersready);
+$(document).on('turbolinks:load', ordersready);
 

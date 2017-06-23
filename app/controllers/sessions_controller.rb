@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  skip_before_action :authorise
   def new
   end
 
@@ -7,6 +8,7 @@ class SessionsController < ApplicationController
     if user.try(:authenticate, params[:password])
       session[:user_id] = user.id
       session[:user_name] = user.name
+      session[:user_role] = user.role
       shop = Shop.find_by(name: user.shop)
       session[:user_shop] = user.shop
       session[:user_shop_id] = shop.id
@@ -23,6 +25,7 @@ class SessionsController < ApplicationController
     session[:user_shop] = nil
     session[:user_shop_id] = nil
     session[:user_day] = nil
+    session[:user_role] = nil
     redirect_to login_url, notice: "Logged out"
   end
 end

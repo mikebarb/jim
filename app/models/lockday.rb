@@ -1,3 +1,5 @@
 class Lockday < ApplicationRecord
-  belongs_to :user
+    validates :day, uniqueness: true
+    
+    belongs_to :user
 end

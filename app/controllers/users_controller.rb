@@ -15,19 +15,38 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
-    @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+    get_shop_options
+    set_role_options
+    #@role_options = ["shop", "baker", "owner", "root", "none"]
+    #@shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+    #logger.debug "@shop_options: " + @shop_optons.inspect
+    #logger.debug "@role_options: " + @role_optons.inspect
   end
 
   # GET /users/1/edit
   def edit
-    @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+    get_shop_options
+    ###@shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+    #logger.debug "@shop_options: " + @shop_optons.inspect
+    set_role_options
+    #@role_options = ["shop", "baker", "owner", "root", "none"]
+    #logger.debug "@role_options: " + @role_optons.inspect
   end
 
   # GET /users/1/editdayshop
   def editdayshop
     unless session[:user_id].nil?  # check that we are logged in
       @user = User.where(id: session[:user_id])
-      @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+      ###@shop_list = Shop.find_by_sql [ "
+      ###  select u.id as user_id, u.name, s.name, s.id as shop_id
+      ###  FROM shops AS s
+      ###  JOIN usershops AS x ON x.shop_id = s.id
+      ###  JOIN users AS u ON u.id =x.user_id
+      ###  WHERE user_id = ?
+      ###", session[:user_id] ]
+      ###@shop_options = @shop_list.map{ |u| [u.name]}
+      #logger.debug "@shop_options: " + @shop_options.inspect
+      get_shop_options
     else
       redirect_to users_url, notice: 'User is not logged in!!!'
     end
@@ -37,7 +56,6 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
-
     respond_to do |format|
       if @user.save
         format.html { redirect_to @user, notice: 'User was successfully created.' }
@@ -69,38 +87,38 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def updatedayshop
     @user = User.find(user_params[:id])
-    logger.debug "@user:" + @user.inspect
+    #logger.debug "@user:" + @user.inspect
 
     @myparams = user_params
-    logger.debug "@myparams:" + @myparams.inspect
+    #logger.debug "@myparams:" + @myparams.inspect
 
     @currentparams = @user.attributes
-    logger.debug "@currentparams:" + @currentparams.inspect
+    #logger.debug "@currentparams:" + @currentparams.inspect
 
     @myshop = user_params[:shop]
-    logger.debug "@myshop:" + @myshop.inspect
+    #logger.debug "@myshop:" + @myshop.inspect
 
     #@myday =Date.new @myparams["day(1i)"].to_i, @myparams["day(2i)"].to_i, @myparams["day(3i)"].to_i
     @myday = @myparams["day"]
-    logger.debug "@myparams day:" + @myparams["day"]
-    logger.debug "@myday:" + @myday.inspect
+    #logger.debug "@myparams day:" + @myparams["day"]
+    #logger.debug "@myday:" + @myday.inspect
     
     if @user.shop != @myshop
-      logger.debug "shop has changed"
+      #logger.debug "shop has changed"
       unless @myshop.nil?
-        logger.debug "shop has valid value" + @myshop.inspect
+        #logger.debug "shop has valid value" + @myshop.inspect
         @user.update_attribute(:shop, @myshop)
       end
     end
     
     if @user.day != @myday
-      logger.debug "day has changed"
+      #logger.debug "day has changed"
       unless @myday.nil?
-        logger.debug "day has valid value" + @myday.inspect
+        #logger.debug "day has valid value" + @myday.inspect
         @user.update_attribute(:day, @myday)
       end
     end
-    logger.debug "@user:" + @user.inspect
+    #logger.debug "@user:" + @user.inspect
 
     respond_to do |format|
       if @user.save
@@ -129,11 +147,23 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   # DELETE /users/1.json
+  # Never want to destroy users as they linked in the orders audit trail.
+  # To disable a user, set the role to "none"
   def destroy
-    @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-      format.json { head :no_content }
+      if @user.destroy
+        format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        if @user.errors.any?
+          @notice_message = "prohibited this user from being destroyed"
+          @user.errors.full_messages.each do |message|
+            @notice_message += ": " + message
+          end
+        end
+        format.html { redirect_to users_url, notice: @notice_message }
+        format.json { head :no_content }      
+      end
     end
   end
 
@@ -145,6 +175,13 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:id, :name, :email, :password, :password_confirmation, :role, :day, :shop)
+      params.require(:user).permit(:id, :name, :email, :password, :password_confirmation, :role, :day, :shop,
+        :shop_ids => []
+      )
+    end
+    
+    # consistent generatoion of the role options across the actions
+    def set_role_options
+      @role_options = ["shop", "baker", "owner", "root", "none"]
     end
 end

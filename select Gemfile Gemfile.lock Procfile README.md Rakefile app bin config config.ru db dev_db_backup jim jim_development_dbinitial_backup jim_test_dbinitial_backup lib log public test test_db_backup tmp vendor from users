@@ -1,0 +1,17 @@
+                List of relations
+ Schema |         Name         | Type  |  Owner   
+--------+----------------------+-------+----------
+ public | ar_internal_metadata | table | postgres
+ public | ingredients          | table | postgres
+ public | lockdays             | table | postgres
+ public | orderlogs            | table | postgres
+ public | orders               | table | postgres
+ public | products             | table | postgres
+ public | recipes              | table | postgres
+ public | schema_migrations    | table | postgres
+ public | sectors              | table | postgres
+ public | shops                | table | postgres
+ public | users                | table | postgres
+ public | usershops            | table | postgres
+(12 rows)
+

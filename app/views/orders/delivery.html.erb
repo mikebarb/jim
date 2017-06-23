@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Deliveries for : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
-
+<h2><%= link_to 'PDF Version', ordersdeliverypdf_path %></h2>
 <% @previous_shop = "" %>
 <% @delivery.each do |deliver| %>
   

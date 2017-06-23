@@ -54,10 +54,14 @@ class SectorsController < ApplicationController
   # DELETE /sectors/1
   # DELETE /sectors/1.json
   def destroy
-    @sector.destroy
     respond_to do |format|
-      format.html { redirect_to sectors_url, notice: 'Sector was successfully destroyed.' }
-      format.json { head :no_content }
+      if @sector.destroy
+        format.html { redirect_to sectors_url, notice: 'Sector was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to sectors_url, notice: 'Sector was not destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 

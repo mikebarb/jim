@@ -1,0 +1,18 @@
+<div class="menu">
+    <ul class="navigation">
+    <% @menu.each do |type| %>
+        <li>
+            <b><%= type[0] %></b>
+            <ul>
+                <% type[1].each do |action| %>
+                    <li><%= link_to action[0], action[1] %></li>
+                <% end %>
+            </ul>
+            <div class="clear"></div>
+        </li>
+    <% end %>
+    </ul>
+</div>
+<br>
+<hr>
+

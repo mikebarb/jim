@@ -33,9 +33,21 @@
 
   <div class="field">
     <%= f.label :role %>
-    <%= f.text_field :role %>
+    <%= f.select :role, @role_options %>
   </div>
-
+  <% logger.debug "user: " + user.inspect %>
+  <% if ["shop", nil].include? user.role %>
+    <div class="managed_shops" >
+  <% else %>
+    <div class="managed_shops, hideme" >
+  <% end %>
+      <br>
+      This shop selection field is for linking the user to shops allowing management of their orders<br>
+      <b> Hold down "control" key to select multiple shops. </b><br>
+      <%= f.select :shop_ids, Shop.all.collect{|x|[x.name, x.id]}, {}, :multiple => true %>
+      <p>
+    </div>
+    
   <div class="field">
     <%= f.label :day %>
     <%= f.date_select :day %>

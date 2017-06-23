@@ -1,16 +1,29 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  #skip_before_action :authorise
+
+  # GET /displayproducts
+  def display
+    #@products = Product.includes(:sector).all
+    #            .order("sectors.name, title")
+                
+    @products = Product.find_by_sql [ "
+      SELECT p.id as product_id, p.title, p.description, p.leadtime, p.price, p.inactive, s.name as sector_name
+      FROM products AS p
+      INNER JOIN sectors AS s ON p.sector_id = s.id and p.inactive = FALSE
+      ORDER BY s.name, p.title
+    "]
+    logger.debug "@products: " + @products.inspect
+  end
 
   # GET /products
   # GET /products.json
   def index
-    @products = Product.all
-                .order("title")
-    logger.debug "@products: " + @products.inspect
-    @myproduct = Product.find(45)
-    logger.debug "@myproduct: " + @myproduct.inspect
-    @cat = @myproduct.title
-    logger.debug "@cat: " + @cat.inspect
+    logger.debug "in products controller - index action"
+    #@products = Product.all
+    #            .order("title")
+    @products = Product.includes(:sector).all
+                .order("sectors.name, title")
   end
 
   # GET /products/1
@@ -26,9 +39,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
-    logger.debug "products controller - @product: " + @product.inspect
     @sector_options = Sector.all.map{ |u| [u.name, u.id] }
-    logger.debug "products controller - @sector_options: " + @sector_options.inspect
   end
 
   # POST /products
@@ -63,13 +74,15 @@ class ProductsController < ApplicationController
 
   # DELETE /products/1
   # DELETE /products/1.json
-  def destroy
-    @product.destroy
-    respond_to do |format|
-      format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # never what a product destroyed as it it linked to the orders
+  # Can inactive through the edit panel.
+  ###def destroy
+  ###  @product.destroy
+  ###  respond_to do |format|
+  ###    format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
+  ###    format.json { head :no_content }
+  ###  end
+  ###end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -79,6 +92,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:title, :description, :leadtime, :price, :sector_id, :sector)
+      params.require(:product).permit(:title, :description, :leadtime, :price, :sector_id, :sector, :inactive)
     end
 end

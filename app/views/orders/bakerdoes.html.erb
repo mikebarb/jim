@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Doe required to fill the Orders to</h1>
+<h1>Dough required to fill the Orders to</h1>
 <h1>Deliver On : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
 
 
@@ -11,6 +11,7 @@
     <tr>
       <th>Ingredient</th>
       <th>Quantity</th>
+      <th>Units</th>
     </tr>
   </thead>
 
@@ -19,6 +20,7 @@
       <tr>
         <td><%= bakerdoe.item %></td>
         <td><%= bakerdoe.totalqty %></td>
+        <td><%= bakerdoe.unit %></td>
       </tr>
     <% end %>
   </tbody>

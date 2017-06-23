@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
+  resources :usershops
   resources :sectors
   get 'orderlogdayshop', to: 'orderlogs#indexdayshop'
-  resources :orderlogs
+  resources :orderlogs, :only => [:create, :index]
   resources :recipes
   resources :ingredients
-  resources :lockdays
+  post 'locktoday', to: 'lockdays#locktoday'
+  resources :lockdays, :only => [:index, :new, :create, :destroy]
   get 'reports/baker'
   get 'reports/deliver'
 
@@ -33,8 +35,9 @@ Rails.application.routes.draw do
   patch 'userdayshop(/:id)', to: 'users#updatedayshop'
   get 'userdayshop', to: 'users#editdayshop'
   resources :users
-  resources :shops
-  resources :products
+  resources :shops,  :except => [:destroy]
+  get 'displayproducts', to: 'products#display'
+  resources :products, :except => [:destroy]
   
   root 'orders#indexedit'
   

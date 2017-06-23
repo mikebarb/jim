@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170609045510) do
+ActiveRecord::Schema.define(version: 20170620004401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20170609045510) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["day"], name: "index_lockdays_on_day", using: :btree
+    t.index ["day"], name: "index_lockdays_on_day", unique: true, using: :btree
     t.index ["user_id"], name: "index_lockdays_on_user_id", using: :btree
   end
 
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20170609045510) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.integer  "sector_id"
+    t.boolean  "inactive"
     t.index ["sector_id"], name: "index_products_on_sector_id", using: :btree
   end
 
@@ -115,6 +116,17 @@ ActiveRecord::Schema.define(version: 20170609045510) do
     t.string   "shop"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
+  end
+
+  create_table "usershops", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "shop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_usershops_on_shop_id", using: :btree
+    t.index ["user_id", "shop_id"], name: "index_usershops_on_user_id_and_shop_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_usershops_on_user_id", using: :btree
   end
 
   add_foreign_key "lockdays", "users"
@@ -127,4 +139,6 @@ ActiveRecord::Schema.define(version: 20170609045510) do
   add_foreign_key "products", "sectors"
   add_foreign_key "recipes", "ingredients"
   add_foreign_key "recipes", "products"
+  add_foreign_key "usershops", "shops"
+  add_foreign_key "usershops", "users"
 end

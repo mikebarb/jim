@@ -1,23 +1,30 @@
 <p id="notice"><%= notice %></p>
-<% user = @current_user %>
+
 <div class="info-container">
   <div class="info-wrapper">
     <h1 class="main">Order Details</h1>
-
-    <% user = @user.first %>
+    <% user = @user %>
     <%= form_for(user, :url => userdayshop_path, method: :patch) do |f| %>
     
       <div class="field">
-        <%= f.text_field :id, {hidden: true, id: 'user_id'} %>
+        <%= f.text_field :id, {hidden: true, id: "user_id" } %>
+        <% logger.debug "in form - @current_user_id: " + @current_user_id.inspect %>
       </div>
       
       <div class="field-wrapper">
         <div class="field intro">
-          <%= user.name %>
+          <%= @user.name %>
         </div>
         
         <div class="field">
           <input type="date" id="day" name="user[day]" value="<%= user.day %>">
+          <% if @locked > 0 %>
+            Locked
+          <% else %>
+            <% if ["baker", "owner", "root"].include? @current_role %>
+              <%= link_to 'Lock today', locktoday_path, { method: :post, :confirm => "Are you sure?" } %>
+            <% end %>
+          <% end %>          
         </div>
       
         <div class="field">
@@ -68,13 +75,13 @@
     <tr class="product" id="<%= product.product_id %>">
       <td class="product_id"><%= product.product_id %></td>
       <td class="title"><%= product.title %></td>
-      <% if @locked == 0 %>
-        <td> 
+      <% if product.locked? %>
+        <td class="qty_locked"><%= product.quantity %></td>
+      <% else %>
+        <td>
           <input class="qty" type="number" id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
           <p class="origqty"><%= product.quantity =%></p>
         </td>
-      <% else %>
-        <td class="qty_locked"><%= product.quantity %></td>
       <% end %>
       <td class="order_id"><%= product.order_id %></td>
     </tr>
@@ -91,3 +98,5 @@
 <%= link_to 'Show delivery page', ordersdelivery_path %>
 <%= link_to 'Show product shop summary page', ordersproductshops_path %>
 <%= link_to 'Show order logs', orderlogdayshop_path %>
+<%= link_to 'Display Product to Users ', displayproducts_path %>
+<%= link_to 'Lock orders for this day', locktoday_path, { method: :post, :confirm => "Are you sure?" } %>
