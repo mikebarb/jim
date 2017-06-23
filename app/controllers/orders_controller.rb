@@ -210,14 +210,19 @@ class OrdersController < ApplicationController
       INNER JOIN sectors AS s ON p.sector_id = s.id 
       ORDER BY s.name, p.title
     ", @current_day, @current_shop_id ]
-
+    
     @lockday = Lockday
              .where("day = ?", @current_day)
     @locked = @lockday.count
+    
+    @user = User.where(id: @current_user_id)
+    @shop_options = Shop.all.order(:name).map{ |u| [u.name] }
+    
 
     #logger.debug "lockday:" + @lockday.inspect
     #logger.debug "locked:" +  @locked.inspect
     #logger.debug "products:" + @products.inspect
+    logger.debug "@shop_options: " + @shop_options.inspect
   end
 
   # GET /orders

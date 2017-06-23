@@ -109,6 +109,7 @@ class UsersController < ApplicationController
           session[:user_day] = @myday unless @myday.nil?
           unless @myshop.nil?
             @shop = Shop.find_by(name: @myshop)
+            logger.debug "@shop: " + @shop.inspect
             session[:user_shop] = @myshop
             session[:user_shop_id] = @shop.id
           end

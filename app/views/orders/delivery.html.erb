@@ -2,8 +2,6 @@
 
 <h1>Deliveries for : <%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</h1>
 
-<h2></h2><%= link_to 'PDF Version', ordersdeliverypdf_path %></h2>
-
 <% @previous_shop = "" %>
 <% @delivery.each do |deliver| %>
   
@@ -36,8 +34,5 @@
 <br>
 <%= link_to 'Show bakers page', ordersbakers_path %>
 <%= link_to 'Show baker does page', ordersbakerdoes_path %>
-<%= link_to 'Show product shop summary page', ordersproductshops_path %>
 <%= link_to 'Order editing for shop on delivery day', ordersedit_path %>
-<%= link_to 'Show ingredients', ingredients_path %>
-<%= link_to 'Show recipes', recipes_path %>
 

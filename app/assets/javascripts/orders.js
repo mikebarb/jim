@@ -8,15 +8,28 @@
 
 $(document).ready(function() {
     console.log("document ready");
-
     $(".sector").click(function(){
         console.log("sector clicked");
         var mytable = $(this).next();
         console.log (this);
         console.log (mytable);
-        $(mytable).toggleClass("hideme showme");
+        $(mytable).slideToggle();
+        $(mytable).toggleClass("hideme");
+        if ($(mytable).hasClass("hideme")) {
+            $(this).children("b").children("span").remove()
+            $(this).children("b").append("<span> + </span>")
+        } else {
+            $(this).children("b").children("span").remove()
+            $(this).children("b").append("<span> - </span>")
+        }
         console.log (this);
         
+    });
+    
+    $(".qty").each(function() {
+        if ($(this).val() != "") {
+            $(this).parent().parent().css('background-color', '#FCB3BC');
+        }
     });
 
 
@@ -49,18 +62,21 @@ $(document).ready(function() {
         if (thisorigqty == 0){         // so need to create an order record.
             console.log("now call ajax to create an order record");
             var myproduct_id = Number($(this).parent().parent().attr("id"));
-            var myshop_id = Number($("#shop_id").text());
-            var myday = $("#day").text();
-            var myuser_id = Number($("#user_id").text());
-            console.log("thisqty:" + thisqty);
-            console.log("thisorigqty:" + thisorigqty);
-            console.log("myproduct_id:" + myproduct_id);
-            console.log("myshop_id:" + myshop_id);
-            console.log("myday:" + myday);
-            console.log("myuser_id:" + myuser_id);
+            var myshop = $('#shop option:selected').attr('value');
+            var myshop_id = Number($('#shop_id').text());
+            var myday = $("#day").val();
+            var myuser_id = Number($("#user_id").val());
+            //console.log(myshop);
+            //console.log("myshop_id: " + myshop_id);
+            //console.log("thisqty:" + thisqty);
+            //console.log("thisorigqty:" + thisorigqty);
+            //console.log("myproduct_id:" + myproduct_id);
+            //console.log("myday:" + myday);
+            //console.log("myuser_id:" + myuser_id);
             $.ajax({
                 type: 'POST',
-                url: "https://baker-micmac.c9users.io/orders",
+                //url: "https://baker-micmac.c9users.io/orders",
+                url: "orders",
                 data: {
                         order: {
                                   product_id: myproduct_id,
@@ -105,7 +121,7 @@ $(document).ready(function() {
             console.log("myorder_id:" + myorder_id);
             $.ajax({
                 type: 'DELETE',
-                url: "https://baker-micmac.c9users.io/orders/" + myorder_id,
+                url: "orders/" + myorder_id,
                 dataType: 'json',
                 success: function(){
                     $(eleorigqty).text("");
@@ -125,7 +141,7 @@ $(document).ready(function() {
             console.log("now call ajax to update quantity on existing record");
             $.ajax({
                 type: 'POST',
-                url: "https://baker-micmac.c9users.io/orders/" + Number($(this).attr("id")),
+                url: "orders/" + Number($(this).attr("id")),
     
                 data: {
                         order: {

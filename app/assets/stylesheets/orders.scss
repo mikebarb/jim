@@ -1,9 +1,16 @@
 // Place all the styles related to the Orders controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+body {
+  background-color: #a8a8a8;
+}
+
+.hidden_content {
+  display: none;
+}
+
 .product {
   margin: 10;
-  background-color: #f8f;
   border:2px solid #77d;
   font-size: x-small;
   line-height: 8px;
@@ -11,30 +18,113 @@
 .title {
   margin: 5;
   color: black;
-  background-color: #aaf;
   line-height: 18px;
+  padding: 5px;
+  text-align: center;
   //border:1px solid black;
 }
 .price {
   margin: 5;
   color: black;
-  background-color: #afa;
   line-height: 18px;
   //border:1px solid black;
+}
+.sector {
+  margin: 30px auto;
+  width: 75%;
+  padding: 15px;
+  border-bottom: 2px solid #F06560;;
+  border-top: 2px solid #F06560;;
+  cursor: pointer;
+  text-align: center;
+  color: #F06560;
+}
+.sector:hover {
+  background-color: #F06560;
+  color: white;
+}
+.sector b {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+#user_shop {
+  padding: 0.70em;
+}
+.info-container {
+  margin-top: 50px;
+  text-align: center;
+}
+.info-wrapper {
+  margin: 0 auto;
+  display: inline-block;
+  padding: 50px;
+  border: 2px solid #7e7e7e;
+  background-color: #f1f1f1;
+}
+.field-wrapper {
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+.field {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 20px;
+}
+.actions input {
+  margin-top: 30px;
+  background: transparent;
+  padding: 0.75em;
+  border: 1px solid #F06560;
+  color: #F06560;
+  width: 100%;
+  background-color: white;
+}
+
+.actions input:hover {
+  background-color: #F06560;
+  color: white;
+  cursor: pointer;
+}
+
+.field:nth-child(3) {
+  margin-right: 0;
+}
+.intro {
+  font-size: 25px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #F06560;
+}
+input[type="date"] {
+  padding: 0.5em;
+}
+select {
+  padding: 0.7em;
+  margin-top: 0.1em;
+}
+
+h1 {
+  font-family: 'Raleway', 'sans-serif';
+  font-size: 40px;
+  padding: 30px;
+  margin-left: 10%;
+  color: #7e7e7e;
+}
+.main {
+  margin-left: 0;
+  text-align: center;
 }
 .qty {
   margin: 5;
   color: black;
-  background-color: #afa;
   line-height: 18px;
-  width: 100%;
+  width: 98%;
   //border:1px solid black;
 }
 .origqty {
   display: none;
   margin: 5;
   color: black;
-  background-color: #afa;
   line-height: 18px;
   //border:1px solid black;
 }
@@ -42,7 +132,6 @@
   display: none;
   margin: 5;
   color: black;
-  background-color: #afa;
   line-height: 18px;
   //border:1px solid black;
 }
@@ -50,21 +139,22 @@
   display: none;
   margin: 5;
   color: black;
-  background-color: #afa;
   line-height: 18px;
   //border:1px solid black;
 }
+
 .hideme {
-  display: none;  // use inline or none
+  //display: none;  // use inline or none
 }
 .showme {
   //display: inline;  // use inline or none
 }
 td {
-  vertical-align: top;
+  padding: 5px;
 }
 table {
-  width: 40%;
+  margin: 0 auto;
+  width: 50%;
   table-layout: fixed;
 }
 table, th, td {

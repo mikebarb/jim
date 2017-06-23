@@ -1,13 +1,41 @@
 <p id="notice"><%= notice %></p>
+<% user = @current_user %>
+<div class="info-container">
+  <div class="info-wrapper">
+    <h1 class="main">Order Details</h1>
 
-<table>
-  <tr><td>user</td><td><%= @current_user %></td><td id="user_id"><%= @current_user_id %></td></tr>
-  <tr><td>shop</td><td><%= @current_shop %></td><td id="shop_id"><%= @current_shop_id %></td></tr>
-  <tr><td>deliver</td><td id="day"><%= @current_day %> (<%= Date.parse(@current_day).strftime("%A") %>)</td><td></td></tr>
-</table>
-<%= link_to 'Update shop or delivery day', userdayshop_path %>
-
-<h1>Order for Products - index_edit</h1>
+    <% user = @user.first %>
+    <%= form_for(user, :url => userdayshop_path, method: :patch) do |f| %>
+    
+      <div class="field">
+        <%= f.text_field :id, {hidden: true, id: 'user_id'} %>
+      </div>
+      
+      <div class="field-wrapper">
+        <div class="field intro">
+          <%= user.name %>
+        </div>
+        
+        <div class="field">
+          <input type="date" id="day" name="user[day]" value="<%= user.day %>">
+        </div>
+      
+        <div class="field">
+          <%= f.select :shop, @shop_options, {}, {:id => 'shop'} %>
+        </div>
+        
+        <div class="hidden_content", id="shop_id">
+          <%=  @current_shop_id %>
+        </div>
+      
+        <div class="actions">
+          <%= f.submit %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<h1>Order for Products</h1>
 
 <% if @noorders == true then %>
   <div class=checkordersempty>
@@ -30,10 +58,11 @@
   <% @products.each do |product| %>
     <% if product.sector_name != cat %>
       <% unless cat.blank? %>
-        </table>
+        </table></div>
       <% end %>
       <% cat = product.sector_name %>
-      <div class="sector"><b><%= cat %></b></div>
+      <div class="sector"><b><%= cat %><span> - </span></b></div>
+      <div>
       <table class="product_group, showme">
     <% end %>
     <tr class="product" id="<%= product.product_id %>">
