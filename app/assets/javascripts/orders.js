@@ -9,6 +9,17 @@
 //$(document).ready(function() {     
 var ordersready = function() {
     console.log("document ready from inside ordersready");
+    
+    $('.info-wrapper').find('form[class="edit_user"]').find('input[type=submit]').hide();
+    
+    $(".auto-submit-item").on('change', (function(){
+        console.log("autosubmit");
+        console.log(this);
+        $(this).parents("form").submit();
+    }));
+    
+    
+    
     $(".sector").click(function(){
         console.log("sector clicked");
         var mytable = $(this).next();
@@ -32,7 +43,11 @@ var ordersready = function() {
                 }
             })        
             $(this).children("b").children("span").remove();
-            $(this).children("b").append("<span> +    has " + flagContent + " items </span>");
+            if (flagContent > 0){
+                $(this).children("b").append("<span> +    selected " + flagContent + " items </span>");
+            } else {
+                $(this).children("b").append("<span> + </span>");
+            }
         } else {
             $(this).children("b").children("span").remove();
             $(this).children("b").append("<span> - </span>");
