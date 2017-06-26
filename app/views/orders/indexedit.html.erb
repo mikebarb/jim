@@ -48,7 +48,7 @@
     <div class=checkordersempty>
       <form action=<%= ordersedit_path %> method="get" >
         <% if @copymessage.nil? %>
-          <h2>do you want to copy a previous order to start off - select the day and click copy?</h2>
+          <h2>Do you want to copy a previous order to start off - select the day and click copy?</h2>
         <% else %>
           <h2><%= @copymessage %></h2>
         <% end %>
@@ -71,7 +71,7 @@
       <% cat = product.sector_name %>
       <div class="sector"><b><%= cat %><span> - </span></b></div>
       <div>
-      <table class="product_group, showme">
+      <table class="product_group, showme fixed_table">
     <% end %>
     <tr class="product" id="<%= product.product_id %>">
       <td class="product_id"><%= product.product_id %></td>

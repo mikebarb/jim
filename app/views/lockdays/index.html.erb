@@ -18,7 +18,7 @@
         <td><%= lockday.day %></td>
         <td><%= lockday.locked %></td>
         <td><%= lockday.user.name %></td>
-        <td><%= link_to 'Destroy', lockday, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Unlock', lockday, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

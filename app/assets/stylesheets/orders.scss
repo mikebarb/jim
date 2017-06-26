@@ -8,7 +8,7 @@ body {
 .hidden_content {
   display: none;
 }
-table tr:first-child td:nth-child(2), table tr:first-child td:nth-child(3) {
+.fixed_table tr:first-child td:nth-child(2), .fixed_table tr:first-child td:nth-child(3) {
   width: 50%;
 }
 
