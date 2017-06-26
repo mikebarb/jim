@@ -8,7 +8,7 @@
 
 //$(document).ready(function() {     
 var ordersready = function() {
-    console.log("document ready");
+    console.log("document ready from inside ordersready");
     $(".sector").click(function(){
         console.log("sector clicked");
         var mytable = $(this).next();
@@ -16,15 +16,28 @@ var ordersready = function() {
         console.log (mytable);
         $(mytable).slideToggle();
         $(mytable).toggleClass("hideme");
+        var myval = 0;
         if ($(mytable).hasClass("hideme")) {
-            $(this).children("b").children("span").remove()
-            $(this).children("b").append("<span> + </span>")
+            var flagContent = 0;
+            $.each($(this).next().find(".qty"), function( index, el ){
+                myval = Number($(el).val());
+                if (myval > 0) {
+                    flagContent += 1;
+                }
+            })
+            $.each($(this).next().find(".qty_locked"), function( index, el ){
+                myval = Number($(el).text());
+                if (myval > 0) {
+                    flagContent += 1;
+                }
+            })        
+            $(this).children("b").children("span").remove();
+            $(this).children("b").append("<span> +    has " + flagContent + " items </span>");
         } else {
-            $(this).children("b").children("span").remove()
-            $(this).children("b").append("<span> - </span>")
+            $(this).children("b").children("span").remove();
+            $(this).children("b").append("<span> - </span>");
         }
         console.log (this);
-        
     });
     
     $(".qty").each(function() {
@@ -32,7 +45,12 @@ var ordersready = function() {
             $(this).parent().parent().css('background-color', '#FCB3BC');
         }
     });
-
+    
+    $(".qty_locked").each(function() {
+        if ($(this).text() != "") {
+            $(this).parent().css('background-color', '#FCB3BC');
+        }
+    });
 
     $(".noclonebutton").click(function(){
         console.log("noclonebutton clicked");
@@ -94,6 +112,7 @@ var ordersready = function() {
                     $(eleorigqty).text(thisqty.toString());
                     $(eleqty).attr("id", data.id);
                     $(eleorderid).text(data.id);
+                    $(eleqty).parent().parent().css('background-color', '#FCB3BC');
                     
                     console.log("order record added by ajax successfully");
                     console.log(data);
@@ -129,6 +148,7 @@ var ordersready = function() {
                     $(eleqty).val("");
                     $(eleqty).attr("id", "");
                     $(eleorderid).text("");
+                    $(eleqty).parent().parent().css('background-color', '#FFFFFF');
                     console.log("order record deleted by ajax successfully" + myorder_id);
                     //alert("order record deleted - myorder_id");
                 },
@@ -140,6 +160,7 @@ var ordersready = function() {
         } else {
             // well, we can just update the quantity.
             console.log("now call ajax to update quantity on existing record");
+            $(eleqty).parent().parent().css('background-color', '#FFFFFF');
             $.ajax({
                 type: 'POST',
                 url: "orders/" + Number($(this).attr("id")),
@@ -155,16 +176,18 @@ var ordersready = function() {
                     $(eleorigqty).text(thisqty.toString());
                     console.log("orders ajax update done");
                     //alert("quantity updated");
+                    $(eleqty).parent().parent().css('background-color', '#FCB3BC');
                 },
                 error: function(){
                     console.log("orders ajax update failed");
                     alert("Faild to update quantity");
+                    $(eleqty).parent().parent().css('background-color', '#FCB3BC');
                 }
             });
         }
     });
 };
 
-$(document).ready(ordersready);
 //$(document).on('turbolinks:load', ordersready);
+$(document).on('turbolinks:load', ordersready);
 
