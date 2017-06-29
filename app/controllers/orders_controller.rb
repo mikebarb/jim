@@ -117,6 +117,11 @@ class OrdersController < ApplicationController
 
   # GET /delivery
   def delivery
+    @bakery = Shop.find(1)
+    bakeryAddress = @bakery.address
+    logger.debug("@bakery: " + @bakery.inspect)
+    @bakeryA = bakeryAddress.split(",")
+    logger.debug("@bakeryA: " + @bakeryA.inspect)
     @delivery = Order.find_by_sql ["
       SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
       FROM orders AS o
@@ -128,6 +133,11 @@ class OrdersController < ApplicationController
 
   # GET /deliverypdf
   def deliverypdf
+    @bakery = Shop.find(1)
+    bakeryA = @bakery.address
+    @bakeryA = bakeryA.split(",")
+    logger.debug("@bakeryA: " + @bakeryA.inspect)
+    logger.debug("@bakery: " + @bakery.inspect)
     @delivery = Order.find_by_sql ["
       SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
       FROM orders AS o
@@ -139,8 +149,10 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html do
         render pdf: "Delivery_Dockets",
+                    layout: "layouts/pdf.html.erb",
                     template: "orders/deliverypdf.pdf.erb",
-                    locals: {:delivery => @delivery}
+                    locals: {:delivery => @delivery}#,
+                    #show_as_html: true
       end
     end
   end

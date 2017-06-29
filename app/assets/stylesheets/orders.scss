@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 body {
-  background-color: #a8a8a8;
+  //background-color: #a8a8a8;
 }
 
 .hidden_content {
@@ -157,15 +157,78 @@ td {
 }
 table {
   margin: 0 auto;
-  width: 50%;
+  width: 100%;
   table-layout: fixed;
 }
 table, th, td {
   border: 1px solid black;
+  border-collapse: collapse;
 }
 
 .my-over {
   border: 2px solid blue;
+}
+
+
+
+
+//Delivery Docket
+.wrapper {
+  width: 1000px;
+  margin: 5em auto;
+  
+  h1 {
+    text-align: center;
+    margin: 0 0 1em 0;
+    background-color: #F06560;
+    font-weight: bold;
+    color:black;
+  }
+  
+  .info-name {
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    padding-bottom: 0.3em;
+    border-bottom: 5px solid #F06560;
+  }
+  
+  .table {
+    border: 1px solid black;  
+  }
+  
+  table {
+    tr {
+      td:nth-child(1) {
+        padding-left: 2em;
+      }
+      td:nth-child(2) {
+        text-align: right;
+        padding-right: 2em;
+      }
+    }
+  }
+}
+
+.column-left {
+  vertical-align: top;
+  display: inline-block;
+  width: 30%;
+  margin-right: 10%;
+  
+  .info {
+    margin-left: 1em;
+  }
+}
+
+.column-right {
+  vertical-align: top;
+  display: inline-block;
+  width: 60%;
+  
+  table {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 .processing {
