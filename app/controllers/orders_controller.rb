@@ -100,7 +100,7 @@ class OrdersController < ApplicationController
       GROUP BY s.name, p.title
       ORDER BY s.name ASC, p.title ASC
     ", @current_day]
-    logger.debug "@bakers: " + @bakers.inspect    
+    #logger.debug "@bakers: " + @bakers.inspect    
     ###@baker1 = Order
     ###          .where("day = ?", params[:day])
     ###          .joins(:product, :shop)
@@ -169,11 +169,11 @@ class OrdersController < ApplicationController
   # GET /ordersedit
   def indexedit
   # stuff required for the user update of day and shops
-  logger.debug "current_user_id:" + @current_user_id.inspect
+  #logger.debug "current_user_id:" + @current_user_id.inspect
   @user = User.find(@current_user_id)
-  logger.debug "@user:" + @user.inspect
+  #logger.debug "@user:" + @user.inspect
   @shop_options = get_shop_options
-  logger.debug "@shop_options: " + @shop_options.inspect
+  #logger.debug "@shop_options: " + @shop_options.inspect
   # first up - check if there are already orders for this day
   # if not, give the user a chance to clone from an existing order
     @orders = Order.all
@@ -285,7 +285,7 @@ class OrdersController < ApplicationController
   def create
     @order = Order.new(order_params)
     @order.locked = false
-    logger.debug "@order - passed in: " + @order.inspect
+    #logger.debug "@order - passed in: " + @order.inspect
     # now create the order log record
     @log = Orderlog.new
     @log.day = @order.day
@@ -294,7 +294,7 @@ class OrdersController < ApplicationController
     @log.product_id = @order.product_id
     @log.quantity = @order.quantity
     @log.oldquantity = 0
-    logger.debug "logging record: " + @log.inspect
+    #logger.debug "logging record: " + @log.inspect
     respond_to do |format|
       if @order.save
         @log.save
@@ -310,30 +310,30 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
-    logger.debug "controller orders update called"
-    logger.debug "@order-1=" + @order.inspect
+    #logger.debug "controller orders update called"
+    #logger.debug "@order-1=" + @order.inspect
     
     # now create the order log record
     @log = Orderlog.new
     @log.oldquantity = @order.quantity
     #@order.quantity = params[:quantity]
-    logger.debug "@order-2=" + @order.inspect
+    #logger.debug "@order-2=" + @order.inspect
     respond_to do |format|
       if @order.update(order_params)
-        logger.debug "@order - after update: " + @order.inspect
+        #logger.debug "@order - after update: " + @order.inspect
         @log.day = @order.day
         @log.user_id = @order.user_id
         @log.shop_id = @order.shop_id
         @log.product_id = @order.product_id
         @log.quantity = @order.quantity
-        logger.debug "logging record: " + @log.inspect
+        #logger.debug "logging record: " + @log.inspect
         @log.save
-        logger.debug "Order controller - successful update"
+        #logger.debug "Order controller - successful update"
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
         format.js
         format.json { render :show, status: :ok, location: @order }
       else
-        logger.debug "Order controller - failed update"
+        #logger.debug "Order controller - failed update"
         format.html { render :edit }
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
@@ -373,16 +373,4 @@ class OrdersController < ApplicationController
       #params.require(:id).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id)
       params.require(:order).permit(:product_id, :shop_id, :day, :quantity, :locked, :user_id, :origqty, :cost)
     end
-    
-    # Check that the user has logged in
-    ###def check_login
-    ###  @current_user = session[:user_name]
-    ###  if @current_user.nil? 
-    ###    redirect_to login_url, alert: "login required to view & update Orders!!"
-    ###  end
-    ###  @current_shop = session[:user_shop]
-    ###  @current_day = session[:user_day]
-    ###  @current_shop_id = session[:user_shop_id]
-    ###  @current_user_id = session[:user_id]
-    ###end
 end
