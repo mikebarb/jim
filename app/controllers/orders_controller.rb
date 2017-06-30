@@ -21,29 +21,38 @@ class OrdersController < ApplicationController
     ", @current_day]
     #logger.debug "@colheaders: " + @colheaders.inspect 
 
+    ###@rowheaders_keep = Order.find_by_sql ["
+    ###  SELECT DISTINCT ON (p.title) p.title, o.id, o.product_id, p.sector_id
+    ###  FROM orders AS o
+    ###  INNER JOIN products AS p 
+    ###  ON o.product_id = p.id AND o.day = ?
+    ###  ORDER BY p.title ASC
+    ###", @current_day]
+
     @rowheaders = Order.find_by_sql ["
-      SELECT DISTINCT ON (p.title) p.title, o.id, o.product_id
+      SELECT DISTINCT ON (p.title) p.title, o.id, o.product_id, p.sector_id, s.name
       FROM orders AS o
-      INNER JOIN products AS p 
-      ON o.product_id = p.id AND o.day = ?
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN sectors AS s ON s.id = p.sector_id
       ORDER BY p.title ASC
     ", @current_day]
     #logger.debug "@rowheaders: " + @rowheaders.inspect 
 
-    @summary = Array.new(2 + @rowheaders.count){Array.new(2 + @colheaders.count){Hash.new()}}
+    @summary = Array.new(2 + @rowheaders.count){Array.new(3 + @colheaders.count){Hash.new()}}
 
     i = 1
     @rowindex = Hash.new
-    @rowheaders.each do |entry|
+    @rowheaders.sort_by(&:name).each do |entry|
       i += 1
       thisproduct=entry.title
-      @summary[i][1]["value"] = 0
-      @summary[i][0]["value"] = thisproduct
+      @summary[i][2]["value"] = 0
+      @summary[i][0]["value"] = entry.name.to_str 
+      @summary[i][1]["value"] = thisproduct 
       @rowindex[thisproduct] = i
     end
     #logger.debug "@rowindex: " + @rowindex.inspect
     
-    j = 1
+    j = 2
     @colindex = Hash.new
     @colheaders.each do |entry|
       j += 1
@@ -55,10 +64,10 @@ class OrdersController < ApplicationController
     #logger.debug "@colindex: " + @colindex.inspect
     
     #misc headers
-    @summary[1][1]["value"] = "Totals"
-    @summary[1][0]["value"] = "Products"
-    @summary[0][1]["value"] = "Shops"
-    
+    @summary[1][2]["value"] = "Totals"
+    @summary[1][0]["value"] = "Category"
+    @summary[1][1]["value"] = "Products"
+    @summary[0][3]["value"] = "Shops"
     
     @prodshop.each do |entry|
       thisprod = entry.title    #row - i
@@ -67,9 +76,9 @@ class OrdersController < ApplicationController
       unless entry.cost.nil?    # if has not been locked yet, treat as 0 value.
         @summary[1][@colindex[thisshop]]["value"] += entry.quantity * entry.cost          #was price for product price, now from order table
       end
-      @summary[@rowindex[thisprod]][1]["value"] += entry.quantity
+      @summary[@rowindex[thisprod]][2]["value"] += entry.quantity
     end
-    j=1
+    j=2
     # format the currency cells
     @colheaders.each do |entry|
       j += 1
