@@ -24,19 +24,6 @@
           border-bottom: 5px solid #F06560;
       }
        
-      .wrapper table tr td, th {
-        margin-left: 0;
-        border: 1px solid black;
-        border-collapse: collapse;
-      }
-        
-      .wrapper table tr td:nth-child(1) {
-              padding-left: 2em;
-      }
-      .wrapper table tr td:nth-child(2) {
-              text-align: right;
-              padding-right: 2em;
-      }
       
       .column-left {
         vertical-align: top;
@@ -60,9 +47,53 @@
           margin-left: 0;
           border: 1px solid black;
           border-collapse: collapse;
-        }
       }
 
+      .column-right table tr td, th {
+        margin-left: 0;
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+        
+      .column-right table tr td:nth-child(1) {
+              padding-left: 2em;
+      }
+      
+      .column-right table tr td:nth-child(2) {
+              text-align: right;
+              padding-right: 2em;
+      }
+
+
+      .shop-name {
+        position: relative;
+        height: 250px;
+      }
+
+      .img-name {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+      
+      .img-bar {
+        z-index: -1;
+        width: 100%;
+        position: absolute;
+        top: 70px;
+        left: 0;
+      }
+
+      .img-bar h1 {
+        color: white;
+      }
+      
+      .clearfix {
+        overflow: auto;
+        zoom: 1;
+      }
+      
     </style> 
     
   </head>

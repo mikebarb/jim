@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Deliveries for : <%= Date.parse(@current_day).strftime("%A %d %B %Y") %></h1>
+
 <p style='page-break-after:always;'></p>
 <% @previous_shop = "" %>
 <% @delivery.each do |deliver| %>
@@ -16,28 +17,34 @@
     
     <% @previous_shop = deliver.shop_name %>
     <div class="wrapper">
-      <h1><%= deliver.shop_name %></h1>
-      <div class="column-left">
-        <h2 class="info-name"><%= @bakery.name %></h1>
-        <div class="info">
-          <% @bakeryA.each do |a| %>
-            <%= a %></br>
-          <% end %>
-          </br>
-          <b>Delivery Date:</b></br>
-          <%= Date.parse(@current_day).strftime("%A %d %B %Y") %>
+      <div class="shop-name">
+        <img class="img-name" src="data:image/png;base64, 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" />        
+        <div class="img-bar">
+          <h1><%= deliver.shop_name %></h1>
         </div>
-      </div><!--
-   --><div class="column-right">
-        <h2 class="info-name">Description</h2>
-        <table class="product-table">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
+      </div>
+    </div>  
+    <div class="column-left">
+      <h2 class="info-name"><%= @bakery.name %></h1>
+      <div class="info">
+        <% @bakeryA.each do |a| %>
+          <%= a %></br>
+        <% end %>
+        </br>
+        <b>Delivery Date:</b></br>
+        <%= Date.parse(@current_day).strftime("%A %d %B %Y") %>
+      </div>
+    </div><!--
+ --><div class="column-right">
+      <h2 class="info-name">Description</h2>
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
   <% end %>
   <tr>
     <td><%= deliver.title %></td>

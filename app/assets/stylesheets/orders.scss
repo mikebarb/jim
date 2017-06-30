@@ -192,10 +192,6 @@ table, th, td {
     border-bottom: 5px solid #F06560;
   }
   
-  .table {
-    border: 1px solid black;  
-  }
-  
   table {
     tr {
       td:nth-child(1) {
@@ -231,6 +227,30 @@ table, th, td {
   }
 }
 
+.shop-name {
+  position: relative;
+  height: 250px;
+}
+
+.img-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.img-bar {
+  z-index: -1;
+  width: 100%;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  
+  h1 {
+    color: white;
+  }
+}
+
 .processing {
   background-colour: green;
 }
@@ -243,3 +263,7 @@ table, th, td {
   background-colour: yellow;
 }
 
+.clearfix {
+  overflow: auto;
+  zoom: 1;
+}
