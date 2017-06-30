@@ -93,18 +93,18 @@ class OrdersController < ApplicationController
   def bakers
     #logger.debug "bakers:" + @bakers.inspect
     @bakers = Order.find_by_sql ["
-      SELECT SUM(quantity) as totalqty, p.title
+      SELECT SUM(quantity) as totalqty, p.title, s.name
       FROM orders AS o
-      INNER JOIN products AS p 
-      ON o.product_id = p.id AND o.day = ?
-      GROUP BY p.title
-      ORDER BY p.title ASC
+      INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
+      INNER JOIN sectors AS s ON p.sector_id = s.id
+      GROUP BY s.name, p.title
+      ORDER BY s.name ASC, p.title ASC
     ", @current_day]
-    
-    @baker1 = Order
-              .where("day = ?", params[:day])
-              .joins(:product, :shop)
-              .order(:product_id)
+    logger.debug "@bakers: " + @bakers.inspect    
+    ###@baker1 = Order
+    ###          .where("day = ?", params[:day])
+    ###          .joins(:product, :shop)
+    ###          .order(:product_id)
               
     @lockday = Lockday
                  .where("day = ?", params[:day])

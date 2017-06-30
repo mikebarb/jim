@@ -90,14 +90,3 @@
   <% unless cat.blank? %>
     </table>
   <% end %>
-
-<br>
-
-<%= link_to 'Show all Orders', orders_path %>
-<%= link_to 'Show bakers page', ordersbakers_path %>
-<%= link_to 'Show bakers doe page', ordersbakerdoes_path %>
-<%= link_to 'Show delivery page', ordersdelivery_path %>
-<%= link_to 'Show product shop summary page', ordersproductshops_path %>
-<%= link_to 'Show order logs', orderlogdayshop_path %>
-<%= link_to 'Display Product to Users ', displayproducts_path %>
-<%= link_to 'Lock orders for this day', locktoday_path, { method: :post, :confirm => "Are you sure?" } %>
