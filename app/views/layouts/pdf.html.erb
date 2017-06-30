@@ -3,8 +3,67 @@
   <head>
     <title>Jim</title>
     <%= csrf_meta_tags %>
-    <%= wicked_pdf_stylesheet_link_tag "orders" %>
 
+    <style>
+      .wrapper {
+        width: 1000px;
+        margin: 5em auto;
+      }
+      .wrapper h1 {
+          text-align: center;
+          margin: 0 0 1em 0;
+          background-color: #F06560;
+          font-weight: bold;
+          color:black;
+      }
+        
+      .wrapper .info-name {
+          margin-bottom: 1em;
+          text-transform: uppercase;
+          padding-bottom: 0.3em;
+          border-bottom: 5px solid #F06560;
+      }
+       
+      .wrapper table tr td, th {
+        margin-left: 0;
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+        
+      .wrapper table tr td:nth-child(1) {
+              padding-left: 2em;
+      }
+      .wrapper table tr td:nth-child(2) {
+              text-align: right;
+              padding-right: 2em;
+      }
+      
+      .column-left {
+        vertical-align: top;
+        display: inline-block;
+        width: 30%;
+        margin-right: 10%;
+      }
+      
+      .column-left .info {
+          margin-left: 1em;
+      }
+      
+      .column-right {
+        vertical-align: top;
+        display: inline-block;
+        width: 60%;
+      }
+      
+      .column-right table {
+          width: 100%;
+          margin-left: 0;
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+      }
+
+    </style> 
     
   </head>
 
