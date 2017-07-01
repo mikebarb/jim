@@ -7,9 +7,7 @@
 
 <% @previous_shop = "" %>
 <% @delivery.sort_by(&:title).sort_by(&:sector_name).sort_by(&:shop_name).each do |deliver| %>
-  <% logger.debug("primary loop: " + deliver.inspect + " : " + deliver.sector_name + " : " + deliver.title + " : " + deliver.shop_name) %>
   <% if @previous_shop != deliver.shop_name %>
-    <% logger.debug("shop change") %>
     <% @previous_shop = deliver.shop_name %>
     </tbody>
     </table>
@@ -35,13 +33,10 @@
         </div>
       </div><!--
    --><div class="column-right">
-        <% logger.debug("passing through div for column-right") %>
         <h2 class="info-name">Description</h2>
   <% end %>
   <% if @previous_sector != deliver.sector_name %>
-    <% logger.debug("changing sectors: " + @previous_sector + "->" + deliver.sector_name) %>
     <% if @previous_sector != "" %>
-      <% logger.debug("previous sector is not blank***: " + @previous_sector.inspect) %>
       </tbody>
       </table>
     <% end %>
