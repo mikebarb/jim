@@ -132,12 +132,14 @@ class OrdersController < ApplicationController
     @bakeryA = bakeryAddress.split(",")
     logger.debug("@bakeryA: " + @bakeryA.inspect)
     @delivery = Order.find_by_sql ["
-      SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
+      SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id, c.name as sector_name
       FROM orders AS o
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN shops AS s ON o.shop_id = s.id
+      INNER JOIN sectors AS c ON c.id = p.sector_id
       ORDER BY s.name ASC, p.title ASC
     ", @current_day]
+    logger.debug("@delivery: " + @delivery.inspect)
   end
 
   # GET /deliverypdf
@@ -148,13 +150,14 @@ class OrdersController < ApplicationController
     logger.debug("@bakeryA: " + @bakeryA.inspect)
     logger.debug("@bakery: " + @bakery.inspect)
     @delivery = Order.find_by_sql ["
-      SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id
+      SELECT o.id, o.quantity, p.title, s.name as shop_name, o.shop_id, c.name as sector_name
       FROM orders AS o
       INNER JOIN products AS p ON o.product_id = p.id AND o.day = ?
       INNER JOIN shops AS s ON o.shop_id = s.id
+      INNER JOIN sectors AS c ON c.id = p.sector_id      
       ORDER BY s.name ASC, p.title ASC
     ", @current_day]
-    
+    logger.debug("@delivery: " + @delivery.inspect)    
     respond_to do |format|
       format.html do
         render pdf: "Delivery_Dockets",
