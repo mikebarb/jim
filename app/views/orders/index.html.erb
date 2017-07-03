@@ -6,6 +6,8 @@ shop: <%= @current_shop %> - (<%= @current_shop_id %>)<br>
 day : <%= @current_day %><br>
 shop_id : <%= @current_shop_id %><br>
 
+<p><%= link_to 'Download all orders', downloadorders_path %></p>
+
 <table>
   <thead>
     <tr>
@@ -24,12 +26,12 @@ shop_id : <%= @current_shop_id %><br>
     <% @orders.each do |order| %>
       <tr>
         <td><%= order.id %></td>
-        <td><%= order.product.title %></td>
-        <td><%= order.shop.name %></td>
+        <td><%= order.product_title %></td>
+        <td><%= order.shop_name %></td>
         <td><%= order.day %></td>
         <td><%= order.quantity %></td>
         <td><%= order.locked %></td>
-        <td><%= order.user.name %></td>
+        <td><%= order.user_name %></td>
         <td><%= link_to 'Show', order %></td>
         <td><%= link_to 'Edit', edit_order_path(order) %></td>
         <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -44,3 +46,4 @@ shop_id : <%= @current_shop_id %><br>
 <br>
 <%= link_to 'Show bakers page', ordersbakers_path %>
 <%= link_to 'Show delivery page', ordersdelivery_path %>
+<%= link_to 'Download all orders', downloadorders_path %>

@@ -77,8 +77,9 @@ class ApplicationController < ActionController::Base
                                                     "create"    => ["owner", "baker", "shop"],
                                                     "update"    => ["owner", "baker", "shop"],
                                                     "destroy"   => ["owner", "baker", "shop"],
+                                               "downloadorders" => ["owner", "baker"],
                                                   "productshop" => ["owner", "baker"],
-                                                    "bakers"     => ["owner", "baker"],
+                                                    "bakers"    => ["owner", "baker"],
                                                     "bakerdoes" => ["owner", "baker"],
                                                     "delivery"  => ["owner", "baker"],
                                                   "deliverypdf" => ["owner", "baker"],
@@ -196,83 +197,83 @@ class ApplicationController < ActionController::Base
             if ["owner", "root"].include? @current_role
                 # can do everything
                 @menu =[
-                        ["Shopping", 
-                            [   ["Ordering",    "ordersedit"],
-                                ["Products",    "displayproducts"],
-                                ["Order Logs", "orderlogdayshop"],
-                                ["Logout",   "logout"]
-                            ]
-                        ], 
-                        ["Baking", 
-                            [   ["Whiteboard",  "ordersproductshops"],
-                                ["Products to Bake", "ordersbakers"],
-                                ["Dough Listing", "ordersbakerdoes"],
-                                ["Recipes", "recipes"],
-                                ["Ingredients", "ingredients"],
-                                ["Locked days", "lockdays"]
-                            ]
-                        ],
-                        ["Delivery", 
-                            [   ["Packaging Summary",  "ordersproductshops"],
-                                ["Delivery Dockets", "ordersdelivery"]
-                            ]
-                        ],
-                        ["Manage", 
-                            [   ["Users",  "users"],
-                                ["Shops", "shops"],
-                                ["Users & Shops", "usershops"],
-                                ["Products", "products"],
-                                ["Product Categories", "sectors"],
-                                ["All Orders", "orders"]
-                            ]
-                        ],
-                        ["Admin", 
-                            [   ["Locking days", "lockdays"],
-                                ["Order Logs", "orderlogs"]
+                            ["Manage", 
+                                [   ["Users",  "users"],
+                                    ["Shops", "shops"],
+                                    ["Users & Shops", "usershops"],
+                                    ["Products", "products"],
+                                    ["Product Categories", "sectors"],
+                                    ["All Orders", "orders"]
+                                ]
+                            ],
+                            ["Admin", 
+                                [   ["Locking days", "lockdays"],
+                                    ["Order Logs", "orderlogs"]
+                                ]
+                            ],
+                            ["Delivery", 
+                                [   ["Packaging Summary",  "ordersproductshops"],
+                                    ["Delivery Dockets", "ordersdelivery"]
+                                ]
+                            ],
+                            ["Baking", 
+                                [   ["Whiteboard",  "ordersproductshops"],
+                                    ["Products to Bake", "ordersbakers"],
+                                    ["Dough Listing", "ordersbakerdoes"],
+                                    ["Recipes", "recipes"],
+                                    ["Ingredients", "ingredients"],
+                                    ["Locked days", "lockdays"]
+                                ]
+                            ],
+                            ["Shopping", 
+                                [   ["Ordering",    "ordersedit"],
+                                    ["Products",    "displayproducts"],
+                                    ["Order Logs", "orderlogdayshop"],
+                                    ["Logout",   "logout"]
+                                ]
                             ]
                         ]
-                       ]
             elsif ["baker"].include? @current_role                       
                 @menu =[
-                        ["Shopping", 
-                            [   ["Ordering",    "ordersedit"],
-                                ["Products",    "displayproducts"],
-                                ["Order Logs", "orderlogdayshop"],
-                                ["Logout",   "logout"]
-                            ]
-                        ], 
-                        ["Baking", 
-                            [   ["Whiteboard",  "ordersproductshops"],
-                                ["Products to Bake", "ordersbakers"],
-                                ["Dough Listing", "ordersbakerdoes"],
-                                ["Recipes", "recipes"],
-                                ["Ingredients", "ingredients"],
-                                ["Locked days", "lockdays"]
-                            ]
-                        ],
-                        ["Delivery", 
-                            [   ["Packaging Summary",  "ordersproductshops"],
-                                ["Delivery Dockets", "ordersdelivery"]
+                            ["Shopping", 
+                                [   ["Ordering",    "ordersedit"],
+                                    ["Products",    "displayproducts"],
+                                    ["Order Logs", "orderlogdayshop"],
+                                    ["Logout",   "logout"]
+                                ]
+                            ], 
+                            ["Baking", 
+                                [   ["Whiteboard",  "ordersproductshops"],
+                                    ["Products to Bake", "ordersbakers"],
+                                    ["Dough Listing", "ordersbakerdoes"],
+                                    ["Recipes", "recipes"],
+                                    ["Ingredients", "ingredients"],
+                                    ["Locked days", "lockdays"]
+                                ]
+                            ],
+                            ["Delivery", 
+                                [   ["Packaging Summary",  "ordersproductshops"],
+                                    ["Delivery Dockets", "ordersdelivery"]
+                                ]
                             ]
                         ]
-                     ]
             elsif ["shop"].include? @current_role                       
                 @menu =[
-                        ["Shopping", 
-                            [   ["Ordering",    "ordersedit"],
-                                ["Products",    "displayproducts"],
-                                ["Order Logs", "orderlogdayshop"],
-                                ["Logout",   "logout"]                            ]
-                        ]
-                     ]                   
-            elsif ["none", nil].include? @current_role
-                    # minimum capability - login only, will makes menu logic work
-                    @menu =[
-                        ["Shopping", 
-                            [   ["Login",    "login"]
+                            ["Shopping", 
+                                [   ["Ordering",    "ordersedit"],
+                                    ["Products",    "displayproducts"],
+                                    ["Order Logs", "orderlogdayshop"],
+                                    ["Logout",   "logout"]
+                                ]
                             ]
                         ]
-                     ]                       
+            elsif ["none", nil].include? @current_role
+                # minimum capability - login only, will makes menu logic work
+                @menu =[
+                            ["Shopping", 
+                                ["Login",    "login"]
+                            ]
+                        ]
             end
         end
 end

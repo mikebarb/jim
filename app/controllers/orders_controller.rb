@@ -262,11 +262,36 @@ class OrdersController < ApplicationController
     end
   end
 
+  # GET /downloadorders
+  def downloadorders
+    @orders = Order.find_by_sql ["
+      SELECT o.id, o.day, o.quantity, o.shop_id, o.product_id, o.user_id, p.title as product_title, s.name as shop_name, u.name as user_name 
+      FROM orders AS o
+      INNER JOIN products AS p ON p.id = o.product_id
+      INNER JOIN shops AS s ON s.id = o.shop_id
+      INNER JOIN users AS u ON u.id = o.user_id
+      ORDER BY o.day, s.name, p.title
+    "]
+    mydata = "Product\tShop\tDay\tQuantity\tUser\r\n" 
+    @orders.each do |order|
+      mydata += order.product_title + "\t" + order.shop_name + "\t" + order.day.to_s + "\t" + order.quantity.to_s + "\t" + order.user_name + "\r\n"
+    end
+    send_data mydata, filename: 'all orders.txt'
+  end
+
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
-    .order(:day, :shop_id, :product_id)
+    #@orders = Order.all
+    #.order(:day, :shop_id, :product_id)
+    @orders = Order.find_by_sql ["
+      SELECT o.id , o.day, o.quantity, o.shop_id, o.locked, o.product_id, o.user_id, p.title as product_title, s.name as shop_name, u.name as user_name 
+      FROM orders AS o
+      INNER JOIN products AS p ON p.id = o.product_id
+      INNER JOIN shops AS s ON s.id = o.shop_id
+      INNER JOIN users AS u ON u.id = o.user_id
+      ORDER BY o.day, s.name, p.title
+    "]
   end
 
   # GET /orders/1

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get 'ordersbakerdoes', to: 'orders#bakerdoes'
   get 'ordersdelivery', to: 'orders#delivery'
   get 'ordersdeliverypdf', to: 'orders#deliverypdf'
+  get 'downloadorders', to: 'orders#downloadorders'
   #get 'ordersbakers/:day', to: 'orders#bakers'
   #get 'ordersdelivery/:day', to: 'orders#delivery'
   resources :orders
