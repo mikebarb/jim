@@ -14,7 +14,7 @@ body {
 
 .product {
   margin: 10;
-  border:2px solid #77d;
+  //border:2px solid #77d;
   font-size: x-small;
   line-height: 8px;
 }
@@ -266,4 +266,58 @@ table, th, td {
 .clearfix {
   overflow: auto;
   zoom: 1;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 25px;
+    line-height: 1;
+    padding: 0.3em 0.2em;
+  }
+  
+  .qty_locked {
+    font-size: 25px;
+  }
+  
+  .qty, .origqty {
+    font-size: 25px;
+  }
+  
+  .sector b {
+    font-size: 35px;
+    line-height: 1;
+  }
+  
+  .info-wrapper {
+    h1 {
+      line-height: 1;
+    }
+  }
+  
+  .field-wrapper {
+    .intro {
+      margin-bottom: 1em;
+    }
+    
+    .field {
+      width: 100%;
+      
+      a {
+        font-size: 25px;
+      }
+      
+      input {
+        width: 90%;
+        font-size: 25px;
+        margin-bottom: 1em;
+      }
+      
+      select {
+        width: 100%;
+        font-size: 25px;
+        margin-top: 0.75em;
+      }
+      
+    }
+  }
 }
