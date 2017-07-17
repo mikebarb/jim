@@ -272,30 +272,42 @@ table, th, td {
 and (min-device-width : 320px) 
 and (max-device-width : 568px) {
   table {
-  width: 50%;
+  width: 95%;
+  }
+  
+  .qty { 
+    width: 60%;
+    margin-left: 20%;
   }
   
   .title {
-    font-size: 25px;
+    font-size: 50px;
     line-height: 1;
     padding: 0.3em 0.2em;
   }
   
   .qty_locked {
-    font-size: 25px;
+    font-size: 50px;
   }
   
   .qty, .origqty {
-    font-size: 25px;
+    font-size: 50px;
+  }
+  
+  .sector {
+    padding: 3em 0;
+    width: 100%;
+    margin: 5em auto;
   }
   
   .sector b {
-    font-size: 35px;
+    font-size: 55px;
     line-height: 1;
   }
   
   .info-wrapper {
     h1 {
+      font-size: 60px;
       line-height: 1;
     }
   }
@@ -303,25 +315,30 @@ and (max-device-width : 568px) {
   .field-wrapper {
     .intro {
       margin-bottom: 1em;
+      font-size: 55px;
     }
     
     .field {
       width: 100%;
       
       a {
-        font-size: 25px;
+        font-size: 55px;
       }
       
       input {
         width: 90%;
-        font-size: 25px;
+        font-size: 55px;
         margin-bottom: 1em;
       }
       
       select {
         width: 100%;
-        font-size: 25px;
+        font-size: 55px;
         margin-top: 0.75em;
+      }
+      
+      option {
+        font-size: 20px;
       }
       
     }

@@ -80,7 +80,7 @@
         <td class="qty_locked"><%= product.quantity %></td>
       <% else %>
         <td>
-          <input class="qty" type="number" pattern="[0-9]*] id="<%= product.order_id %>" value="<%= product.quantity %>" min=0 />
+          <input class="qty" type="number" pattern="[0-9]*] id="<%= product.order_id.to_i %>" value="<%= product.quantity %>" min=0 />
           <p class="origqty"><%= product.quantity =%></p>
         </td>
       <% end %>

@@ -85,6 +85,8 @@ var ordersready = function() {
         var eleqty = $(this);
         var eleorigqty = $(this).parent().find(".origqty");
         var eleorderid = $(this).parent().parent().find(".order_id");
+        var orderid = Number($(eleorderid).text());
+        console.log("orderid: " + orderid);
         var thisqty = Number($(this).val());
         var thisorigqty = Number($(eleorigqty).text());
         console.log("quantity values - thisqty:" + thisqty +
@@ -146,14 +148,14 @@ var ordersready = function() {
             var myshop_id = Number($("#shop_id").text());
             var myday = $("#day").text();
             var myuser_id = Number($("#user_id").text());
-            var myorder_id = Number($(this).attr("id"));
-            console.log("thisqty:" + thisqty);
-            console.log("thisorigqty:" + thisorigqty);
-            console.log("myproduct_id:" + myproduct_id);
-            console.log("myshop_id:" + myshop_id);
-            console.log("myday:" + myday);
-            console.log("myuser_id:" + myuser_id);
-            console.log("myorder_id:" + myorder_id);
+            var myorder_id = orderid;
+            //console.log("thisqty:" + thisqty);
+            //console.log("thisorigqty:" + thisorigqty);
+            //console.log("myproduct_id:" + myproduct_id);
+            //console.log("myshop_id:" + myshop_id);
+            //console.log("myday:" + myday);
+            //console.log("myuser_id:" + myuser_id);
+            //console.log("myorder_id:" + myorder_id);
             $.ajax({
                 type: 'DELETE',
                 url: "orders/" + myorder_id,
@@ -178,7 +180,7 @@ var ordersready = function() {
             $(eleqty).parent().parent().css('background-color', '#FFFFFF');
             $.ajax({
                 type: 'POST',
-                url: "orders/" + Number($(this).attr("id")),
+                url: "orders/" + orderid,
     
                 data: {
                         order: {
